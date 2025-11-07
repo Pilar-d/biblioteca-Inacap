@@ -10,7 +10,7 @@
     <!-- Header -->
     <header class="header">
         <div class="logo-container">
-            <div class="logo"><img src="img/inacap-logo.png" alt=""></div>
+            <div class="logo"><img src="img/inacap-logo.png" alt="inacap"></div>
             <div class="system-name">
                 <h1>Sistema de Gestión de Biblioteca <span>Digital</span></h1>
             </div>
@@ -72,6 +72,52 @@
             Soporte técnico: <a href="soportebiblioteca@inacapmail.cl" class="support-link">soporte@biblioteca.inacap.cl</a> | Teléfono: +569 12236578
         </div>
     </footer>
-    <script src="script.js"></script>
+    <!-- <script src="script.js"></script> -->
 </body>
+<script>
+    // --- JS para index.html (Página de Login) ---
+
+// Simulación de login: Guarda datos y REDIRIGE A 'bibliotecario.html'
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const usernameOrEmail = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    if (usernameOrEmail && password) {
+        
+        // 1. Guardar datos de sesión en localStorage
+        localStorage.setItem('currentUserName', usernameOrEmail);
+        localStorage.setItem('currentUserRole', 'Bibliotecario'); // Rol fijo
+        localStorage.setItem('lastAccessTime', new Date().toLocaleString());
+        
+        // 2. Redirigir al dashboard
+        window.location.href = 'bibliotecario.html'; 
+
+    } else {
+        alert('Por favor, complete todos los campos');
+    }
+});
+
+// Lógica para recordar usuario (localStorage)
+document.addEventListener('DOMContentLoaded', function() {
+    const rememberedUser = localStorage.getItem('rememberedUser');
+    const usernameInput = document.getElementById('username');
+    const rememberCheckbox = document.getElementById('remember');
+
+    if (rememberedUser && usernameInput && rememberCheckbox) {
+        usernameInput.value = rememberedUser;
+        rememberCheckbox.checked = true;
+    }
+});
+
+document.getElementById('remember').addEventListener('change', function() {
+    const usernameInput = document.getElementById('username');
+    if (this.checked && usernameInput) {
+        localStorage.setItem('rememberedUser', usernameInput.value);
+    } else {
+        localStorage.removeItem('rememberedUser');
+    }
+});
+</script>
 </html>
