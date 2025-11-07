@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Módulo Bibliotecario - Biblioteca Digital</title>
+    
     <style>
         * {
             margin: 0;
@@ -29,19 +30,23 @@
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            /* Ajustado el gap */
+            gap: 1.5rem; 
         }
 
         .logo {
-            width: 40px;
-            height: 40px;
-            background: #4f46e5;
-            border-radius: 8px;
+            /* Se quita el tamaño fijo para que la imagen lo defina */
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: bold;
+        }
+
+        .logo img {
+            width: 90px;
+            height: 90px; /* Tamaño fijo para que sea circular */
+            object-fit: cover; /* Crucial para evitar distorsión */
+            display: block;
+            border-radius: 50%;
         }
 
         .user-info {
@@ -64,18 +69,30 @@
             font-size: 0.9rem;
         }
 
-        .btn-logout {
-            padding: 0.5rem 1rem;
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 6px;
+        /* Estilo del botón de logout */
+        .logout-btn {
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: bold;
             cursor: pointer;
+            border: 1px solid #adb5bd; 
+            border-radius: 5px; 
+            transition: all 0.3s ease;
+            background-color: #f24949; 
+            color: #ffffff;
+            border-color: #adb5bd;
+        
+        }
+
+        .logout-btn:hover {
+            background-color: #ff0000;
+            color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .main-container {
             display: flex;
-            min-height: calc(100vh - 80px);
+            min-height: calc(100vh - 80px); 
         }
 
         .sidebar {
@@ -83,6 +100,7 @@
             background: white;
             padding: 2rem 1rem;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0; 
         }
 
         .nav-item {
@@ -94,7 +112,7 @@
         }
 
         .nav-item.active {
-            background: #c5463a9f;
+            background: #c4bf2a;
             color: white;
         }
 
@@ -194,7 +212,7 @@
 
         .book-results {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
@@ -238,55 +256,82 @@
         .hidden {
             display: none;
         }
-             .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
+
+        /* ----------------------------------------------------- */
+        /* --- MEDIA QUERIES PARA RESPONSIVIDAD (MÓVIL) --- */
+        /* ----------------------------------------------------- */
+
+        @media (max-width: 768px) {
+            
+            .header {
+                padding: 1rem;
+                flex-wrap: wrap; 
+            }
+
+            .user-info {
+                width: 100%; 
+                margin-top: 0.5rem;
+                justify-content: space-between;
+            }
+
+            .user-details {
+                text-align: left;
+            }
+            
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 1rem 0.5rem;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                display: flex;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .nav-item {
+                flex-shrink: 0;
+                margin-bottom: 0;
+                margin-right: 0.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+
+            .section-title {
+                margin-bottom: 1rem;
+                font-size: 1.3rem;
+            }
+            
+            .search-container {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .book-results {
+                grid-template-columns: 1fr; 
+            }
         }
-
-        .logo img {
-            width: 90px; /* ajusta según necesites */
-            height: auto;
-            display: block;
-            border-radius: 50%;
-
-        }
-        .logout-btn {
-    /* Apariencia básica */
-    padding: 8px 15px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    border: 1px solid #ccc; /* Borde suave */
-    border-radius: 5px; /* Bordes redondeados */
-    transition: all 0.3s ease; /* Transiciones suaves */
-    
-    /* Colores: Estilo Neutral */
-    background-color: #f84c29; /* Fondo gris claro */
-    color: #ffffff; /* Texto oscuro */
-    border-color: #adb5bd;
-}
-
-.logout-btn:hover {
-    /* Efecto al pasar el ratón */
-    background-color: #ff0000; /* Fondo ligeramente más oscuro */
-    color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-}
     </style>
 </head>
 <body>
     <header class="header">
         <div class="logo-container">
-            <div class="logo"><img src="img/inacap-logo.png" alt="Inacap"></div>
+            <div class="logo"><img src="img/inacap-logo.png" alt="Logo Institución"></div>
             <div>
                 <h3>Sistema de Gestión de Biblioteca Digital</h3>
                 <small>Módulo Bibliotecario</small>
             </div>
         </div>
         <div id="dashboard-header">
-            <p>Bienvenido(a): <strong id="userName"></strong> (<span id="userRole"></span>)</p>
-            <small id="lastAccess"></small>
+            <div class="user-details">
+                <p>Bienvenido(a): <strong id="userName"></strong> (<span id="userRole"></span>)</p>
+                <small id="lastAccess"></small>
+            </div>
             <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
         </div>
     </header>
@@ -300,7 +345,6 @@
         </nav>
 
         <main class="content">
-            <!-- Sección de Préstamos -->
             <div id="prestamos" class="content-section active">
                 <h2 class="section-title">Realizar Préstamo de Libros</h2>
                 
@@ -314,8 +358,7 @@
                     </div>
                     
                     <div id="studentResults" class="search-results hidden">
-                        <!-- Resultados de búsqueda aparecen aquí -->
-                    </div>
+                        </div>
                     
                     <div id="selectedStudent" class="student-info hidden">
                         <h4>Estudiante Seleccionado</h4>
@@ -333,8 +376,7 @@
                         </div>
                         
                         <div id="bookResults" class="book-results">
-                            <!-- Resultados de libros aparecen aquí -->
-                        </div>
+                            </div>
                     </div>
 
                     <div id="loanSummary" class="loan-summary hidden">
@@ -345,7 +387,6 @@
                 </div>
             </div>
 
-            <!-- Otras secciones -->
             <div id="devoluciones" class="content-section">
                 <h2 class="section-title">Registrar Devolución</h2>
                 <p>Módulo en desarrollo...</p>
@@ -362,260 +403,268 @@
             </div>
         </main>
     </div>
+    
     <script>
         // --- JS para bibliotecario.html (Dashboard de la Biblioteca) ---
 
-// ⭐ Datos de ejemplo para el sistema de biblioteca
-const students = [
-    { id: 1, rut: '12345678-9', name: 'Juan Pérez', email: 'juan.perez@inacap.cl', career: 'Ingeniería Informática' },
-    { id: 2, rut: '98765432-1', name: 'María Rodríguez', email: 'maria.rodriguez@inacap.cl', career: 'Administración' },
-    { id: 3, rut: '45678912-3', name: 'Carlos López', email: 'carlos.lopez@inacap.cl', career: 'Contabilidad' },
-    { id: 4, rut: '32165498-7', name: 'Ana Silva', email: 'ana.silva@inacap.cl', career: 'Diseño Gráfico' },
-    { id: 5, rut: '78912345-6', name: 'Pedro González', email: 'pedro.gonzalez@inacap.cl', career: 'Ingeniería Civil' }
-];
+        // ⭐ Datos de ejemplo para el sistema de biblioteca
+        const students = [
+            { id: 1, rut: '12345678-9', name: 'Juan Pérez', email: 'juan.perez@inacap.cl', career: 'Ingeniería Informática' },
+            { id: 2, rut: '98765432-1', name: 'María Rodríguez', email: 'maria.rodriguez@inacap.cl', career: 'Administración' },
+            { id: 3, rut: '45678912-3', name: 'Carlos López', email: 'carlos.lopez@inacap.cl', career: 'Contabilidad' },
+            { id: 4, rut: '32165498-7', name: 'Ana Silva', email: 'ana.silva@inacap.cl', career: 'Diseño Gráfico' },
+            { id: 5, rut: '78912345-6', name: 'Pedro González', email: 'pedro.gonzalez@inacap.cl', career: 'Ingeniería Civil' }
+        ];
 
-const books = [
-    { id: 1, isbn: '978-84-376-0494-7', title: 'Cien años de soledad', author: 'Gabriel García Márquez', available: true },
-    { id: 2, isbn: '978-84-9759-327-8', title: '1984', author: 'George Orwell', available: true },
-    { id: 3, isbn: '978-84-206-7271-9', title: 'El Principito', author: 'Antoine de Saint-Exupéry', available: false },
-    { id: 4, isbn: '978-84-9838-141-2', title: 'Don Quijote de la Mancha', author: 'Miguel de Cervantes', available: true },
-    { id: 5, isbn: '978-84-206-7324-2', title: 'Orgullo y prejuicio', author: 'Jane Austen', available: true },
-    { id: 6, isbn: '978-84-376-0484-8', title: 'Crónica de una muerte anunciada', author: 'Gabriel García Márquez', available: true }
-];
+        const books = [
+            { id: 1, isbn: '978-84-376-0494-7', title: 'Cien años de soledad', author: 'Gabriel García Márquez', available: true },
+            { id: 2, isbn: '978-84-9759-327-8', title: '1984', author: 'George Orwell', available: true },
+            { id: 3, isbn: '978-84-206-7271-9', title: 'El Principito', author: 'Antoine de Saint-Exupéry', available: false },
+            { id: 4, isbn: '978-84-9838-141-2', title: 'Don Quijote de la Mancha', author: 'Miguel de Cervantes', available: true },
+            { id: 5, isbn: '978-84-206-7324-2', title: 'Orgullo y prejuicio', author: 'Jane Austen', available: true },
+            { id: 6, isbn: '978-84-376-0484-8', title: 'Crónica de una muerte anunciada', author: 'Gabriel García Márquez', available: true }
+        ];
 
-let selectedStudent = null;
-let selectedBooks = [];
+        let selectedStudent = null;
+        let selectedBooks = [];
 
-// --- Funciones de Lógica de la Biblioteca (Búsqueda, Selección, Préstamo) ---
+        // --- Funciones de Lógica de la Biblioteca (Búsqueda, Selección, Préstamo) ---
 
-function showSection(sectionId) {
-    document.querySelectorAll('.content-section').forEach(section => {
-        section.classList.remove('active');
-    });
-    document.getElementById(sectionId).classList.add('active');
-    if (event && event.target) {
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        event.target.classList.add('active');
-    }
-}
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Lógica para actualizar el estado 'active' de la navegación
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                // Comprobación para evitar errores si el evento es nulo (e.g., al inicio)
+                if (event && event.target && item === event.target) {
+                     item.classList.add('active');
+                } else if (!event && item.textContent.includes('Préstamo')) {
+                    // Si no hay evento (al iniciar), activar Préstamos
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
 
-function searchStudents() {
-    const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
-    const resultsContainer = document.getElementById('studentResults');
-    
-    if (searchTerm.length < 2) {
-        resultsContainer.classList.add('hidden');
-        return;
-    }
+        function searchStudents() {
+            const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
+            const resultsContainer = document.getElementById('studentResults');
+            
+            if (searchTerm.length < 2) {
+                resultsContainer.classList.add('hidden');
+                return;
+            }
 
-    const filteredStudents = students.filter(student => 
-        student.rut.includes(searchTerm) ||
-        student.name.toLowerCase().includes(searchTerm) ||
-        student.email.toLowerCase().includes(searchTerm)
-    );
+            const filteredStudents = students.filter(student => 
+                student.rut.includes(searchTerm) ||
+                student.name.toLowerCase().includes(searchTerm) ||
+                student.email.toLowerCase().includes(searchTerm)
+            );
 
-    displayStudentResults(filteredStudents);
-}
+            displayStudentResults(filteredStudents);
+        }
 
-function displayStudentResults(students) {
-    const resultsContainer = document.getElementById('studentResults');
-    resultsContainer.innerHTML = '';
+        function displayStudentResults(students) {
+            const resultsContainer = document.getElementById('studentResults');
+            resultsContainer.innerHTML = '';
 
-    if (students.length === 0) {
-        resultsContainer.innerHTML = '<div class="result-item">No se encontraron estudiantes</div>';
-    } else {
-        students.forEach(student => {
-            const div = document.createElement('div');
-            div.className = 'result-item';
-            div.innerHTML = `
-                <strong>${student.name}</strong><br>
-                <small>RUT: ${student.rut} | ${student.email}</small><br>
-                <small>Carrera: ${student.career}</small>
+            if (students.length === 0) {
+                resultsContainer.innerHTML = '<div class="result-item">No se encontraron estudiantes</div>';
+            } else {
+                students.forEach(student => {
+                    const div = document.createElement('div');
+                    div.className = 'result-item';
+                    div.innerHTML = `
+                        <strong>${student.name}</strong><br>
+                        <small>RUT: ${student.rut} | ${student.email}</small><br>
+                        <small>Carrera: ${student.career}</small>
+                    `;
+                    div.onclick = () => selectStudent(student);
+                    resultsContainer.appendChild(div);
+                });
+            }
+
+            resultsContainer.classList.remove('hidden');
+        }
+
+        function selectStudent(student) {
+            selectedStudent = student;
+            document.getElementById('studentSearch').value = student.name;
+            document.getElementById('studentResults').classList.add('hidden');
+            
+            const studentDetails = document.getElementById('studentDetails');
+            studentDetails.innerHTML = `
+                <p><strong>Nombre:</strong> ${student.name}</p>
+                <p><strong>RUT:</strong> ${student.rut}</p>
+                <p><strong>Email:</strong> ${student.email}</p>
+                <p><strong>Carrera:</strong> ${student.career}</p>
             `;
-            div.onclick = () => selectStudent(student);
-            resultsContainer.appendChild(div);
-        });
-    }
-
-    resultsContainer.classList.remove('hidden');
-}
-
-function selectStudent(student) {
-    selectedStudent = student;
-    document.getElementById('studentSearch').value = student.name;
-    document.getElementById('studentResults').classList.add('hidden');
-    
-    const studentDetails = document.getElementById('studentDetails');
-    studentDetails.innerHTML = `
-        <p><strong>Nombre:</strong> ${student.name}</p>
-        <p><strong>RUT:</strong> ${student.rut}</p>
-        <p><strong>Email:</strong> ${student.email}</p>
-        <p><strong>Carrera:</strong> ${student.career}</p>
-    `;
-    
-    document.getElementById('selectedStudent').classList.remove('hidden');
-    document.getElementById('bookSection').classList.remove('hidden');
-    
-    selectedBooks = [];
-    document.getElementById('bookSearch').value = '';
-    searchBooks();
-}
-
-function searchBooks() {
-    const searchTerm = document.getElementById('bookSearch').value.toLowerCase();
-    
-    const filteredBooks = books.filter(book => 
-        book.title.toLowerCase().includes(searchTerm) ||
-        book.author.toLowerCase().includes(searchTerm) ||
-        book.isbn.includes(searchTerm)
-    );
-
-    displayBookResults(filteredBooks);
-}
-
-function displayBookResults(books) {
-    const resultsContainer = document.getElementById('bookResults');
-    resultsContainer.innerHTML = '';
-
-    books.forEach(book => {
-        const div = document.createElement('div');
-        div.className = `book-card ${selectedBooks.find(b => b.id === book.id) ? 'selected' : ''}`;
-        div.innerHTML = `
-            <strong>${book.title}</strong><br>
-            <small>Autor: ${book.author}</small><br>
-            <small>ISBN: ${book.isbn}</small><br>
-            <small>Disponible: ${book.available ? '✅' : '❌'}</small>
-        `;
-        
-        if (book.available) {
-            div.onclick = () => toggleBookSelection(book);
-        } else {
-            div.style.opacity = '0.6';
-            div.style.cursor = 'not-allowed';
+            
+            document.getElementById('selectedStudent').classList.remove('hidden');
+            document.getElementById('bookSection').classList.remove('hidden');
+            
+            selectedBooks = [];
+            document.getElementById('bookSearch').value = '';
+            searchBooks();
         }
-        
-        resultsContainer.appendChild(div);
-    });
-}
 
-function toggleBookSelection(book) {
-    const index = selectedBooks.findIndex(b => b.id === book.id);
-    
-    if (index === -1) {
-        selectedBooks.push(book);
-    } else {
-        selectedBooks.splice(index, 1);
-    }
-    
-    updateLoanSummary();
-    searchBooks(); 
-}
+        function searchBooks() {
+            const searchTerm = document.getElementById('bookSearch').value.toLowerCase();
+            
+            const filteredBooks = books.filter(book => 
+                book.title.toLowerCase().includes(searchTerm) ||
+                book.author.toLowerCase().includes(searchTerm) ||
+                book.isbn.includes(searchTerm)
+            );
 
-function updateLoanSummary() {
-    const summaryContainer = document.getElementById('loanSummary');
-    const detailsContainer = document.getElementById('summaryDetails');
-    
-    if (!selectedStudent || selectedBooks.length === 0) {
-        summaryContainer.classList.add('hidden');
-        return;
-    }
-    
-    detailsContainer.innerHTML = `
-        <p><strong>Estudiante:</strong> ${selectedStudent.name}</p>
-        <p><strong>Libros seleccionados:</strong></p>
-        <ul>
-            ${selectedBooks.map(book => `<li>${book.title} - ${book.author}</li>`).join('')}
-        </ul>
-        <p><strong>Total de libros:</strong> ${selectedBooks.length}</p>
-        <p><strong>Fecha de préstamo:</strong> ${new Date().toLocaleDateString()}</p>
-        <p><strong>Fecha de devolución:</strong> ${new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString()}</p>
-    `;
-    
-    summaryContainer.classList.remove('hidden');
-}
-
-function confirmLoan() {
-    if (!selectedStudent) {
-        alert('Por favor, primero seleccione un estudiante.');
-        return;
-    }
-
-    if (selectedBooks.length === 0) {
-        alert('Por favor, seleccione al menos un libro');
-        return;
-    }
-    
-    const bookTitles = selectedBooks.map(book => book.title).join(', ');
-    alert(`¡Préstamo realizado con éxito!\n\nEstudiante: ${selectedStudent.name}\nLibros: ${bookTitles}`);
-    
-    selectedBooks.forEach(loanedBook => {
-        const bookIndex = books.findIndex(b => b.id === loanedBook.id);
-        if (bookIndex !== -1) {
-            books[bookIndex].available = false;
+            displayBookResults(filteredBooks);
         }
-    });
 
-    resetLoanForm();
-    searchBooks();
-}
+        function displayBookResults(books) {
+            const resultsContainer = document.getElementById('bookResults');
+            resultsContainer.innerHTML = '';
 
-function resetLoanForm() {
-    selectedStudent = null;
-    selectedBooks = [];
-    document.getElementById('studentSearch').value = '';
-    document.getElementById('bookSearch').value = '';
-    document.getElementById('selectedStudent').classList.add('hidden');
-    document.getElementById('bookSection').classList.add('hidden');
-    document.getElementById('loanSummary').classList.add('hidden');
-    document.getElementById('studentResults').classList.add('hidden');
-    document.getElementById('studentDetails').innerHTML = '';
-}
+            books.forEach(book => {
+                const div = document.createElement('div');
+                div.className = `book-card ${selectedBooks.find(b => b.id === book.id) ? 'selected' : ''}`;
+                div.innerHTML = `
+                    <strong>${book.title}</strong><br>
+                    <small>Autor: ${book.author}</small><br>
+                    <small>ISBN: ${book.isbn}</small><br>
+                    <small>Disponible: ${book.available ? '✅' : '❌'}</small>
+                `;
+                
+                if (book.available) {
+                    div.onclick = () => toggleBookSelection(book);
+                } else {
+                    div.style.opacity = '0.6';
+                    div.style.cursor = 'not-allowed';
+                }
+                
+                resultsContainer.appendChild(div);
+            });
+        }
+
+        function toggleBookSelection(book) {
+            const index = selectedBooks.findIndex(b => b.id === book.id);
+            
+            if (index === -1) {
+                selectedBooks.push(book);
+            } else {
+                selectedBooks.splice(index, 1);
+            }
+            
+            updateLoanSummary();
+            searchBooks(); 
+        }
+
+        function updateLoanSummary() {
+            const summaryContainer = document.getElementById('loanSummary');
+            const detailsContainer = document.getElementById('summaryDetails');
+            
+            if (!selectedStudent || selectedBooks.length === 0) {
+                summaryContainer.classList.add('hidden');
+                return;
+            }
+            
+            detailsContainer.innerHTML = `
+                <p><strong>Estudiante:</strong> ${selectedStudent.name}</p>
+                <p><strong>Libros seleccionados:</strong></p>
+                <ul>
+                    ${selectedBooks.map(book => `<li>${book.title} - ${book.author}</li>`).join('')}
+                </ul>
+                <p><strong>Total de libros:</strong> ${selectedBooks.length}</p>
+                <p><strong>Fecha de préstamo:</strong> ${new Date().toLocaleDateString()}</p>
+                <p><strong>Fecha de devolución:</strong> ${new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString()}</p>
+            `;
+            
+            summaryContainer.classList.remove('hidden');
+        }
+
+        function confirmLoan() {
+            if (!selectedStudent) {
+                alert('Por favor, primero seleccione un estudiante.');
+                return;
+            }
+
+            if (selectedBooks.length === 0) {
+                alert('Por favor, seleccione al menos un libro');
+                return;
+            }
+            
+            const bookTitles = selectedBooks.map(book => book.title).join(', ');
+            alert(`¡Préstamo realizado con éxito!\n\nEstudiante: ${selectedStudent.name}\nLibros: ${bookTitles}`);
+            
+            selectedBooks.forEach(loanedBook => {
+                const bookIndex = books.findIndex(b => b.id === loanedBook.id);
+                if (bookIndex !== -1) {
+                    books[bookIndex].available = false;
+                }
+            });
+
+            resetLoanForm();
+            searchBooks();
+        }
+
+        function resetLoanForm() {
+            selectedStudent = null;
+            selectedBooks = [];
+            document.getElementById('studentSearch').value = '';
+            document.getElementById('bookSearch').value = '';
+            document.getElementById('selectedStudent').classList.add('hidden');
+            document.getElementById('bookSection').classList.add('hidden');
+            document.getElementById('loanSummary').classList.add('hidden');
+            document.getElementById('studentResults').classList.add('hidden');
+            document.getElementById('studentDetails').innerHTML = '';
+        }
 
 
-// --- Función de Cierre de Sesión (Desde bibliotecario.html) ---
-function logout() {
-    if (confirm('¿Está seguro que desea cerrar sesión?')) {
-        // Limpiar datos de sesión del usuario
-        localStorage.removeItem('currentUserName');
-        localStorage.removeItem('currentUserRole');
-        localStorage.removeItem('lastAccessTime');
-        
-        // Redirigir de vuelta a la página de login
-        window.location.href = 'index.html'; 
-    }
-}
+        // --- Función de Cierre de Sesión ---
+        function logout() {
+            if (confirm('¿Está seguro que desea cerrar sesión?')) {
+                // Limpiar datos de sesión del usuario
+                localStorage.removeItem('currentUserName');
+                localStorage.removeItem('currentUserRole');
+                localStorage.removeItem('lastAccessTime');
+                
+                // Redirigir de vuelta a la página de login
+                window.location.href = 'index.html'; 
+            }
+        }
 
-// --- Inicialización del Dashboard ---
-function initializeDashboard() {
-    const username = localStorage.getItem('currentUserName');
-    const role = localStorage.getItem('currentUserRole');
-    const lastAccess = localStorage.getItem('lastAccessTime');
-    
-    // Verificar sesión y mostrar datos
-    if (username) {
-        document.getElementById('userName').textContent = username;
-        document.getElementById('userRole').textContent = role || 'Bibliotecario'; 
-        document.getElementById('lastAccess').textContent = `Último acceso: ${lastAccess || 'Ahora'}`;
-    } else {
-        // Redirigir si no hay sesión activa
-        window.location.href = 'index.html'; 
-    }
+        // --- Inicialización del Dashboard ---
+        function initializeDashboard() {
+            const username = localStorage.getItem('currentUserName');
+            const role = localStorage.getItem('currentUserRole');
+            const lastAccess = localStorage.getItem('lastAccessTime');
+            
+            // Verificar sesión y mostrar datos
+            if (username) {
+                document.getElementById('userName').textContent = username;
+                document.getElementById('userRole').textContent = role || 'Bibliotecario'; 
+                document.getElementById('lastAccess').textContent = `Último acceso: ${lastAccess || 'Ahora'}`;
+            } else {
+                // Redirigir si no hay sesión activa
+                window.location.href = 'index.html'; 
+            }
 
-    // Inicializar la vista de libros
-    searchBooks();
-    
-    // Asegurar que las secciones de préstamo estén ocultas al inicio
-    document.getElementById('selectedStudent').classList.add('hidden');
-    document.getElementById('bookSection').classList.add('hidden');
-    document.getElementById('loanSummary').classList.add('hidden');
-    document.getElementById('studentResults').classList.add('hidden');
-}
+            // Inicializar la vista de libros
+            searchBooks();
+            
+            // Asegurar que las secciones de préstamo estén ocultas al inicio
+            document.getElementById('selectedStudent').classList.add('hidden');
+            document.getElementById('bookSection').classList.add('hidden');
+            document.getElementById('loanSummary').classList.add('hidden');
+            document.getElementById('studentResults').classList.add('hidden');
+        }
 
-// Iniciar el dashboard al cargar la página
-document.addEventListener('DOMContentLoaded', initializeDashboard);
-        
+        // Iniciar el dashboard al cargar la página
+        document.addEventListener('DOMContentLoaded', initializeDashboard);
     </script>
 </body>
 </html>
