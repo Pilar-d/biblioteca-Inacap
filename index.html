@@ -29,7 +29,7 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label for="username">Usuario</label>
-                    <input type="text" id="username" class="form-control" placeholder="Ingrese correo" required>
+                    <input type="text" id="username" class="form-control" placeholder="Ingrese su nombre de usuario" required>
                 </div>
 
                 <div class="form-group">
@@ -45,15 +45,17 @@
                 <button type="submit" class="btn-login">Iniciar Sesión</button>
             </form>
         </div>
-        <div class="dashboard" id="dashboard">
+
+        <!-- Dashboard oculto -->
+        <div class="dashboard" id="dashboard" style="display:none;">
             <div class="dashboard-header">
                 <div class="user-info">
                     <div class="user-details">
-                        <h3>Bienvenido, <span id="userName">María González</span></h3>
+                        <h3>Bienvenido, <span id="userName">Bibliotecario</span></h3>
                         <div class="user-role" id="userRole">Bibliotecario</div>
                     </div>
                     <div class="session-info">
-                        <div class="last-access" id="lastAccess">Último acceso: 15 Nov 2024, 14:30</div>
+                        <div class="last-access" id="lastAccess"></div>
                         <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
                     </div>
                 </div>
@@ -69,55 +71,60 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="support-info">
-            Soporte técnico: <a href="soportebiblioteca@inacapmail.cl" class="support-link">soporte@biblioteca.inacap.cl</a> | Teléfono: +569 12236578
+            Soporte técnico: 
+            <a href="soportebiblioteca@inacapmail.cl" class="support-link">soporte@biblioteca.inacap.cl</a> | 
+            Teléfono: +569 12236578
         </div>
     </footer>
-    <!-- <script src="script.js"></script> -->
-</body>
+
 <script>
-    // --- JS para index.html (Página de Login) ---
-
-// Simulación de login: Guarda datos y REDIRIGE A 'bibliotecario.html'
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const usernameOrEmail = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    
-    if (usernameOrEmail && password) {
+    // --- Login con credenciales fijas ---
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
         
-        // 1. Guardar datos de sesión en localStorage
-        localStorage.setItem('currentUserName', usernameOrEmail);
-        localStorage.setItem('currentUserRole', 'Bibliotecario'); // Rol fijo
-        localStorage.setItem('lastAccessTime', new Date().toLocaleString());
-        
-        // 2. Redirigir al dashboard
-        window.location.href = 'bibliotecario.html'; 
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const remember = document.getElementById('remember').checked;
 
-    } else {
-        alert('Por favor, complete todos los campos');
+        // Credenciales válidas únicas
+        const validUser = 'Bibliotecario';
+        const validPassword = 'Bibliotecario123!@';
+
+        if (username === validUser && password === validPassword) {
+            // Guardar datos de sesión
+            localStorage.setItem('currentUserName', validUser);
+            localStorage.setItem('currentUserRole', 'Bibliotecario');
+            localStorage.setItem('lastAccessTime', new Date().toLocaleString());
+
+            if (remember) {
+                localStorage.setItem('rememberedUser', validUser);
+            } else {
+                localStorage.removeItem('rememberedUser');
+            }
+
+            // Redirigir al dashboard principal
+            window.location.href = 'bibliotecario.html';
+        } else {
+            alert('Usuario o contraseña incorrectos.\n\nIntente nuevamente.');
+        }
+    });
+
+    // --- Recordar usuario ---
+    document.addEventListener('DOMContentLoaded', function() {
+        const rememberedUser = localStorage.getItem('rememberedUser');
+        if (rememberedUser) {
+            document.getElementById('username').value = rememberedUser;
+            document.getElementById('remember').checked = true;
+        }
+    });
+
+    // --- Cerrar sesión ---
+    function logout() {
+        localStorage.removeItem('currentUserName');
+        localStorage.removeItem('currentUserRole');
+        localStorage.removeItem('lastAccessTime');
+        window.location.href = 'index.html';
     }
-});
-
-// Lógica para recordar usuario (localStorage)
-document.addEventListener('DOMContentLoaded', function() {
-    const rememberedUser = localStorage.getItem('rememberedUser');
-    const usernameInput = document.getElementById('username');
-    const rememberCheckbox = document.getElementById('remember');
-
-    if (rememberedUser && usernameInput && rememberCheckbox) {
-        usernameInput.value = rememberedUser;
-        rememberCheckbox.checked = true;
-    }
-});
-
-document.getElementById('remember').addEventListener('change', function() {
-    const usernameInput = document.getElementById('username');
-    if (this.checked && usernameInput) {
-        localStorage.setItem('rememberedUser', usernameInput.value);
-    } else {
-        localStorage.removeItem('rememberedUser');
-    }
-});
 </script>
+</body>
 </html>
