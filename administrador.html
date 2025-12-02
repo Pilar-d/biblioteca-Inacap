@@ -1108,7 +1108,38 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="form-group">
                             <label>Contraseña</label>
                             <input type="password" id="passwordUsuario" class="form-control" placeholder="Ingrese una contraseña segura">
+                            <small id="passwordHelp" class="form-text text-muted"></small>
                         </div>
+                        <script>
+                            document.getElementById("passwordUsuario").addEventListener("input", function () {
+                                const password = this.value;
+                                const helpText = document.getElementById("passwordHelp");
+
+                                // Validación de contraseña segura
+                                const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&._\-]).{8,}$/;
+
+                                if (password.length === 0) {
+                                    helpText.textContent = "";
+                                    this.style.borderColor = "";
+                                    return;
+                                }
+
+                                if (regex.test(password)) {
+                                    helpText.textContent = "Contraseña válida ✔";
+                                    helpText.style.color = "green";
+                                    this.style.borderColor = "green";
+                                    this.setCustomValidity(""); // Permite continuar
+                                } else {
+                                    helpText.textContent = "Debe incluir letras, números, símbolos y mínimo 8 caracteres ❌";
+                                    helpText.style.color = "red";
+                                    this.style.borderColor = "red";
+                                    this.setCustomValidity("Contraseña insegura"); // ❌ No permite continuar
+                                }
+                            });
+
+
+                        </script>
+
                     </div>
                     
                     <div style="display: flex; gap: 1rem;">
@@ -1690,20 +1721,28 @@ function guardarUsuario() {
     const carrera = document.getElementById('carreraUsuario').value;
     const username = document.getElementById('usernameUsuario').value;
     const password = document.getElementById('passwordUsuario').value;
-    
+
     if(!nombre || !email || !username || !password) {
         alert('❌ Por favor complete todos los campos requeridos.');
         return;
     }
-    
+
+    // 🔐 Validación contraseña segura
+    const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-={}[\]|:;"'<>,.?/~`]).{8,}$/;
+
+    if (!regexPassword.test(password)) {
+        alert('⚠ La contraseña debe incluir: \n- Mayúsculas \n- Minúsculas \n- Números \n- Caracteres especiales \n- Al menos 8 caracteres');
+        return;
+    }
+
     let users = JSON.parse(localStorage.getItem('users')) || [];
-    
+
     // Verificar si el usuario ya existe
     if(users.find(u => u.username === username)) {
         alert('❌ El nombre de usuario ya existe.');
         return;
     }
-    
+
     // Crear nuevo usuario
     const nuevoUsuario = {
         id: Date.now(),
@@ -1715,18 +1754,19 @@ function guardarUsuario() {
         career: rol === 'estudiante' ? carrera : null,
         fechaRegistro: new Date().toLocaleString()
     };
-    
+
     users.push(nuevoUsuario);
     localStorage.setItem('users', JSON.stringify(users));
-    
+
     // Registrar auditoría
     registrarAuditoria(currentUser.name, `Creación de usuario: ${nombre} (${rol})`);
-    
+
     alert('✅ Usuario creado exitosamente.');
     ocultarFormUsuario();
     cargarUsuarios();
     actualizarDashboard();
 }
+
 
 function cargarUsuarios() {
     const users = JSON.parse(localStorage.getItem('users')) || [];
