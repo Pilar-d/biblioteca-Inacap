@@ -4,13 +4,360 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biblioteca Digital INACAP</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background:
+                url("img/fondo.png") center/cover no-repeat, /* Imagen de fondo */
+                rgba(135, 122, 192, 0.619); /* Tonalidad blanca */
+            background-blend-mode: lighten; /* Mantiene la imagen visible con tono blanco */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.411);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #a42828;
+        }
+
+        .system-name h1 {
+            font-size: 1.8rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .system-name span {
+            color: #373737;
+        }
+
+        /* Contenedor Principal */
+        .main-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        /* Tarjeta de Login */
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h2 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #171717;
+            box-shadow: 0 0 0 3px rgba(66, 145, 17, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            color: #555;
+        }
+
+        /* Selector de Rol */
+        .role-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .role-selector h3 {
+            margin-bottom: 1rem;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .role-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .role-option {
+            text-align: center;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .role-option:hover {
+            border-color: #cd5b5b;
+            transform: translateY(-2px);
+        }
+
+        .role-option.active {
+            border-color: #ffffff;
+            background: linear-gradient(135deg, #ff4b4b7a 0%, #c31432 100%);
+
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .role-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Botón de Login */
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+           background: linear-gradient(135deg, #b91c1c, #ef4444);
+            transform: translateY(-2px);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(66, 145, 17, 0.3);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        /* Mensaje de Error */
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+            text-align: center;
+            border: 1px solid #fecaca;
+        }
+
+        /* Información de Demostración */
+        .demo-info {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .demo-info h4 {
+            color: #429111;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .demo-credentials {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .credential-item {
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .credential-item strong {
+            color: #333;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .credential-item span {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .note {
+            color: #666;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            padding: 0.5rem;
+            background: #f0f9ff;
+            border-radius: 6px;
+            border-left: 4px solid #429111;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(255, 255, 255, 0.87);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: #555;
+            font-size: 0.9rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .support-info {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .support-link {
+            color: #be3f3f;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .support-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .login-card {
+                padding: 1.5rem;
+            }
+
+            .role-options {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .system-name h1 {
+                font-size: 1.4rem;
+            }
+
+            .login-header h2 {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .login-card {
+                padding: 1.25rem;
+            }
+
+            .demo-credentials {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="logo-container">
-            <div class="logo"><img src="img/inacap-logo.png" alt="inacap"></div>
+            <div class="logo"><img src="img/inacap-logo.png" alt="INACAP"></div>
             <div class="system-name">
                 <h1>Sistema de Gestión de Biblioteca <span>Digital</span></h1>
             </div>
@@ -29,12 +376,32 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label for="username">Usuario</label>
-                    <input type="text" id="username" class="form-control" placeholder="Ingrese su nombre de usuario" required>
+                    <input type="text" id="username" class="form-control" placeholder="Ingrese su usuario" required>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Contraseña</label>
                     <input type="password" id="password" class="form-control" placeholder="Ingrese su contraseña" required>
+                </div>
+
+                <!-- Selector de Rol -->
+                <div class="role-selector">
+                    <h3>Seleccione su rol:</h3>
+                    <div class="role-options">
+                        <div class="role-option active" data-role="estudiante">
+                            <div class="role-icon">👨‍🎓</div>
+                            <div class="role-name">Estudiante</div>
+                        </div>
+                        <div class="role-option" data-role="bibliotecario">
+                            <div class="role-icon">👩‍💼</div>
+                            <div class="role-name">Bibliotecario</div>
+                        </div>
+                        <div class="role-option" data-role="administrador">
+                            <div class="role-icon">👨‍💼</div>
+                            <div class="role-name">Administrador</div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="role" value="estudiante">
                 </div>
 
                 <div class="checkbox-group">
@@ -43,27 +410,12 @@
                 </div>
 
                 <button type="submit" class="btn-login">Iniciar Sesión</button>
-            </form>
-        </div>
-
-        <!-- Dashboard oculto -->
-        <div class="dashboard" id="dashboard" style="display:none;">
-            <div class="dashboard-header">
-                <div class="user-info">
-                    <div class="user-details">
-                        <h3>Bienvenido, <span id="userName">Bibliotecario</span></h3>
-                        <div class="user-role" id="userRole">Bibliotecario</div>
-                    </div>
-                    <div class="session-info">
-                        <div class="last-access" id="lastAccess"></div>
-                        <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
-                    </div>
+                
+                <div id="errorMsg" class="error-message">
+                    Credenciales incorrectas. Por favor, intente nuevamente.
                 </div>
-            </div>
+            </form>
 
-            <div style="text-align: center; padding: 2rem; background: rgba(255,255,255,0.8); border-radius: 15px;">
-                <h3>Dashboard Principal</h3>
-                <p>Contenido del sistema de gestión de biblioteca aparecería aquí</p>
             </div>
         </div>
     </main>
@@ -72,59 +424,342 @@
     <footer class="footer">
         <div class="support-info">
             Soporte técnico: 
-            <a href="soportebiblioteca@inacapmail.cl" class="support-link">soporte@biblioteca.inacap.cl</a> | 
-            Teléfono: +569 12236578
+            <a href="mailto:soporte@biblioteca.inacap.cl" class="support-link">soporte@biblioteca.inacap.cl</a> | 
+            Teléfono: +569 74647565 | 
+            © 2025 Biblioteca Digital INACAP
         </div>
     </footer>
 
 <script>
-    // --- Login con credenciales fijas ---
+    // --- Función para inicializar datos en localStorage ---
+    function initData() {
+        if (!localStorage.getItem('biblioteca_initialized')) {
+            console.log('🔧 Inicializando datos del sistema...');
+            
+            // Datos de usuarios del sistema
+            const users = [
+                { 
+                    id: 1, 
+                    username: 'estudiante', 
+                    password: '123', 
+                    name: 'Juan Pérez', 
+                    role: 'estudiante', 
+                    email: 'juan.perez@inacap.cl', 
+                    career: 'Ingeniería Informática' 
+                },
+                { 
+                    id: 2, 
+                    username: 'bibliotecario', 
+                    password: '123', 
+                    name: 'María Rodríguez', 
+                    role: 'bibliotecario', 
+                    email: 'maria.rodriguez@inacap.cl' 
+                },
+                { 
+                    id: 3, 
+                    username: 'admin', 
+                    password: '123', 
+                    name: 'Admin Sistema', 
+                    role: 'administrador', 
+                    email: 'admin@inacap.cl' 
+                },
+                { 
+                    id: 4, 
+                    username: 'carlos', 
+                    password: '123', 
+                    name: 'Carlos López', 
+                    role: 'estudiante', 
+                    email: 'carlos.lopez@inacap.cl', 
+                    career: 'Contabilidad' 
+                },
+                { 
+                    id: 5, 
+                    username: 'ana', 
+                    password: '123', 
+                    name: 'Ana Silva', 
+                    role: 'estudiante', 
+                    email: 'ana.silva@inacap.cl', 
+                    career: 'Diseño Gráfico' 
+                }
+            ];
+            
+            // Catálogo de libros inicial
+            const books = [
+                {
+                    id: 1,
+                    title: "1984",
+                    author: "George Orwell",
+                    year: 1949,
+                    category: "Distopía",
+                    description: "Una sociedad vigilada y controlada por un régimen totalitario.",
+                    img: "img/1.jpg",
+                    isbn: "9780451524935",
+                    available: true
+                },
+                {
+                    id: 2,
+                    title: "Don Quijote",
+                    author: "Miguel de Cervantes",
+                    year: 1605,
+                    category: "Novela clásica",
+                    description: "Las aventuras del hidalgo que lucha contra molinos creyendo que son gigantes.",
+                    img: "img/2.jpg",
+                    isbn: "9788491050294",
+                    available: true
+                },
+                {
+                    id: 3,
+                    title: "El Principito",
+                    author: "Saint-Exupéry",
+                    year: 1943,
+                    category: "Infantil / Filosófico",
+                    description: "Un pequeño príncipe recorre planetas en busca de amistad y sentido.",
+                    img: "img/3.jpeg",
+                    isbn: "9780156012195",
+                    available: false
+                },
+                {
+                    id: 4,
+                    title: "Cien Años de Soledad",
+                    author: "Gabriel García Márquez",
+                    year: 1967,
+                    category: "Realismo mágico",
+                    description: "La historia de la familia Buendía en el mítico pueblo de Macondo.",
+                    img: "img/4.jpg",
+                    isbn: "9780307474728",
+                    available: true
+                },
+                {
+                    id: 5,
+                    title: "La Sombra del Viento",
+                    author: "Carlos Ruiz Zafón",
+                    year: 2001,
+                    category: "Misterio",
+                    description: "Un joven descubre un enigmático libro que cambiará su destino.",
+                    img: "img/5.jpeg",
+                    isbn: "9788408172179",
+                    available: true
+                },
+                {
+                    id: 6,
+                    title: "El Hobbit",
+                    author: "J.R.R. Tolkien",
+                    year: 1937,
+                    category: "Fantasía",
+                    description: "Bilbo Bolsón vive una inesperada aventura con enanos y un dragón.",
+                    img: "img/6.jpg",
+                    isbn: "9780547928227",
+                    available: false
+                },
+                {
+                    id: 7,
+                    title: "Harry Potter y la Piedra Filosofal",
+                    author: "J.K. Rowling",
+                    year: 1997,
+                    category: "Fantasía",
+                    description: "Harry descubre que es un mago e inicia su vida en Hogwarts.",
+                    img: "img/7.jpg",
+                    isbn: "9780747532699",
+                    available: true
+                },
+                {
+                    id: 8,
+                    title: "Fahrenheit 451",
+                    author: "Ray Bradbury",
+                    year: 1953,
+                    category: "Distopía",
+                    description: "Un bombero cuya misión es quemar libros comienza a cuestionar su mundo.",
+                    img: "img/8.jpg",
+                    isbn: "9781451673319",
+                    available: true
+                },
+                {
+                    id: 9,
+                    title: "Orgullo y Prejuicio",
+                    author: "Jane Austen",
+                    year: 1813,
+                    category: "Romance / Clásico",
+                    description: "La relación entre Elizabeth Bennet y el reservado Mr. Darcy.",
+                    img: "img/9.jpg",
+                    isbn: "9780141040349",
+                    available: false
+                },
+                {
+                    id: 10,
+                    title: "Crimen y Castigo",
+                    author: "Fiódor Dostoyevski",
+                    year: 1866,
+                    category: "Drama psicológico",
+                    description: "Un joven comete un crimen y lucha con su propia conciencia.",
+                    img: "img/10.jpg",
+                    isbn: "9780143107637",
+                    available: true
+                }
+            ];
+            
+            // Inicializar arrays en localStorage
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('books', JSON.stringify(books));
+            localStorage.setItem('solicitudes', JSON.stringify([]));
+            localStorage.setItem('prestamos', JSON.stringify([]));
+            localStorage.setItem('notificaciones', JSON.stringify([]));
+            localStorage.setItem('auditorias', JSON.stringify([]));
+            localStorage.setItem('multas', JSON.stringify([]));
+            localStorage.setItem('biblioteca_initialized', 'true');
+            
+            console.log('✅ Datos inicializados correctamente.');
+        }
+    }
+
+    // --- Manejo de selección de rol ---
+    document.querySelectorAll('.role-option').forEach(option => {
+        option.addEventListener('click', function() {
+            // Remover clase active de todos
+            document.querySelectorAll('.role-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            
+            // Agregar clase active al seleccionado
+            this.classList.add('active');
+            
+            // Actualizar valor del campo oculto
+            const selectedRole = this.getAttribute('data-role');
+            document.getElementById('role').value = selectedRole;
+            
+            console.log(`Rol seleccionado: ${selectedRole}`);
+        });
+    });
+
+    // --- Manejo del formulario de login ---
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
         const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
+        const password = document.getElementById('password').value;
+        const role = document.getElementById('role').value;
         const remember = document.getElementById('remember').checked;
-
-        // Credenciales válidas únicas
-        const validUser = 'Bibliotecario';
-        const validPassword = 'Bibliotecario123!@';
-
-        if (username === validUser && password === validPassword) {
+        
+        // Ocultar mensaje de error previo
+        document.getElementById('errorMsg').style.display = 'none';
+        
+        // Validar campos vacíos
+        if (!username || !password) {
+            showError('Por favor, complete todos los campos.');
+            return;
+        }
+        
+        // Inicializar datos si es necesario
+        initData();
+        
+        // Obtener usuarios del sistema
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        
+        // Buscar usuario que coincida
+        const user = users.find(u => 
+            u.username === username && 
+            u.password === password && 
+            u.role === role
+        );
+        
+        if (user) {
             // Guardar datos de sesión
-            localStorage.setItem('currentUserName', validUser);
-            localStorage.setItem('currentUserRole', 'Bibliotecario');
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            localStorage.setItem('currentUserName', user.name);
+            localStorage.setItem('currentUserRole', user.role);
             localStorage.setItem('lastAccessTime', new Date().toLocaleString());
-
+            
+            // Recordar usuario si está marcado
             if (remember) {
-                localStorage.setItem('rememberedUser', validUser);
+                localStorage.setItem('rememberedUser', username);
+                localStorage.setItem('rememberedRole', role);
             } else {
                 localStorage.removeItem('rememberedUser');
+                localStorage.removeItem('rememberedRole');
             }
-
-            // Redirigir al dashboard principal
-            window.location.href = 'bibliotecario.html';
+            
+            // Registrar auditoría de inicio de sesión
+            const auditorias = JSON.parse(localStorage.getItem('auditorias')) || [];
+            auditorias.push({
+                usuario: user.name,
+                fecha: new Date().toLocaleDateString('es-CL'),
+                hora: new Date().toLocaleTimeString('es-CL'),
+                ip: '192.168.' + Math.floor(Math.random() * 255) + '.' + Math.floor(Math.random() * 255),
+                accion: 'Inicio de sesión'
+            });
+            localStorage.setItem('auditorias', JSON.stringify(auditorias));
+            
+            // Redirigir según el rol
+            let redirectPage = '';
+            switch(role) {
+                case 'estudiante':
+                    redirectPage = 'estudiante.html';
+                    break;
+                case 'bibliotecario':
+                    redirectPage = 'bibliotecario.html';
+                    break;
+                case 'administrador':
+                    redirectPage = 'administrador.html';
+                    break;
+                default:
+                    redirectPage = 'estudiante.html';
+            }
+            
+            console.log(`✅ Login exitoso. Redirigiendo a: ${redirectPage}`);
+            window.location.href = redirectPage;
+            
         } else {
-            alert('Usuario o contraseña incorrectos.\n\nIntente nuevamente.');
+            showError('Credenciales incorrectas. Verifique usuario, contraseña y rol.');
         }
     });
 
-    // --- Recordar usuario ---
+    // --- Función para mostrar mensaje de error ---
+    function showError(message) {
+        const errorDiv = document.getElementById('errorMsg');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        
+        // Ocultar mensaje después de 5 segundos
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 5000);
+    }
+
+    // --- Recordar usuario al cargar la página ---
     document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar datos del sistema
+        initData();
+        
         const rememberedUser = localStorage.getItem('rememberedUser');
+        const rememberedRole = localStorage.getItem('rememberedRole');
+        
         if (rememberedUser) {
             document.getElementById('username').value = rememberedUser;
             document.getElementById('remember').checked = true;
+            
+            // Establecer el rol recordado
+            if (rememberedRole) {
+                document.getElementById('role').value = rememberedRole;
+                
+                // Actualizar selector visual
+                document.querySelectorAll('.role-option').forEach(opt => {
+                    opt.classList.remove('active');
+                    if (opt.getAttribute('data-role') === rememberedRole) {
+                        opt.classList.add('active');
+                    }
+                });
+            }
         }
+        
+        // Agregar efecto de entrada
+        setTimeout(() => {
+            document.getElementById('loginCard').style.opacity = '1';
+        }, 100);
     });
 
-    // --- Cerrar sesión ---
-    function logout() {
-        localStorage.removeItem('currentUserName');
-        localStorage.removeItem('currentUserRole');
-        localStorage.removeItem('lastAccessTime');
-        window.location.href = 'index.html';
-    }
+    // --- Animación de entrada ---
+    document.getElementById('loginCard').style.opacity = '0';
+    document.getElementById('loginCard').style.transition = 'opacity 0.5s ease';
 </script>
+
 </body>
 </html>

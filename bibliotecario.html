@@ -1,670 +1,1996 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Módulo Bibliotecario - Biblioteca Digital</title>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo Bibliotecario - Biblioteca Digital INACAP</title>
+  <style>
+    :root {
+      --primary: #c4bf2a;
+      --primary-dark: #a8a424;
+      --secondary: #429111;
+      --secondary-dark: #36770e;
+      --danger: #f24949;
+      --danger-dark: #d12f2f;
+      --warning: #f59e0b;
+      --warning-dark: #d97706;
+      --success: #10b981;
+      --success-dark: #059669;
+      --info: #1e90ff;
+      --info-dark: #0069d9;
+      --light: #f8fafc;
+      --dark: #1f2937;
+      --gray: #6b7280;
+      --gray-light: #e5e7eb;
+      --white: #ffffff;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition: all 0.3s ease;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8fafc;
-            min-height: 100vh;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        .header {
-            background: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e5e7eb 100%);
+      min-height: 100vh;
+      color: var(--dark);
+    }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            /* Ajustado el gap */
-            gap: 1.5rem; 
-        }
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--white) 0%, #f9fafb 100%);
+      padding: 1rem 2rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 2px solid var(--gray-light);
+    }
 
-        .logo {
-            /* Se quita el tamaño fijo para que la imagen lo defina */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
 
-        .logo img {
-            width: 90px;
-            height: 90px; /* Tamaño fijo para que sea circular */
-            object-fit: cover; /* Crucial para evitar distorsión */
-            display: block;
-            border-radius: 50%;
-        }
+    .logo {
+      position: relative;
+      width: 90px;
+      height: 90px;
+    }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+    .logo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      box-shadow: 0 4px 12px rgba(196, 191, 42, 0.2);
+      transition: var(--transition);
+    }
 
-        .user-details {
-            text-align: right;
-        }
+    .logo:hover img {
+      transform: rotate(5deg);
+      box-shadow: 0 6px 20px rgba(196, 191, 42, 0.3);
+    }
 
-        .user-name {
-            font-weight: 600;
-            color: #1f2937;
-        }
+    .header-info h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.25rem;
+    }
 
-        .user-role {
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
+    .header-info small {
+      color: var(--gray);
+      font-size: 0.9rem;
+      background: var(--light);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--gray-light);
+    }
 
-        /* Estilo del botón de logout */
-        .logout-btn {
-            padding: 8px 15px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            border: 1px solid #adb5bd; 
-            border-radius: 5px; 
-            transition: all 0.3s ease;
-            background-color: #f24949; 
-            color: #ffffff;
-            border-color: #adb5bd;
-        
-        }
+    /* User Info */
+    .user-container {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
 
-        .logout-btn:hover {
-            background-color: #ff0000;
-            color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-light);
+      box-shadow: var(--shadow);
+    }
 
-        .main-container {
-            display: flex;
-            min-height: calc(100vh - 80px); 
-        }
+    .user-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
 
-        .sidebar {
-            width: 250px;
-            background: white;
-            padding: 2rem 1rem;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            flex-shrink: 0; 
-        }
+    .user-details {
+      text-align: right;
+    }
 
-        .nav-item {
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+    .user-name {
+      font-weight: 700;
+      color: var(--dark);
+      font-size: 1.1rem;
+    }
 
-        .nav-item.active {
-            background: #c4bf2a;
-            color: white;
-        }
+    .user-role {
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
 
-        .nav-item:hover:not(.active) {
-            background: #f3f4f6;
-        }
+    .last-access {
+      font-size: 0.8rem;
+      color: var(--gray);
+    }
 
-        .content {
-            flex: 1;
-            padding: 2rem;
-        }
+    .logout-btn {
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 12px rgba(242, 73, 73, 0.2);
+    }
 
-        .content-section {
-            display: none;
-        }
+    .logout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(242, 73, 73, 0.3);
+    }
 
-        .content-section.active {
-            display: block;
-        }
+    /* Main Container */
+    .main-container {
+      display: flex;
+      min-height: calc(100vh - 80px);
+    }
 
-        .section-title {
-            font-size: 1.5rem;
-            color: #1f2937;
-            margin-bottom: 1.5rem;
-        }
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(135deg, var(--white) 0%, #f9fafb 100%);
+      padding: 2rem 0;
+      box-shadow: 2px 0 15px rgba(0, 0, 0, 0.08);
+      border-right: 1px solid var(--gray-light);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
 
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            margin-bottom: 1.5rem;
-        }
+    .nav-item {
+      padding: 1rem 2rem;
+      margin: 0 1rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-weight: 500;
+      color: var(--gray);
+      border: 1px solid transparent;
+    }
 
-        .search-container {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
+    .nav-item:hover {
+      background: var(--light);
+      color: var(--primary);
+      transform: translateX(5px);
+      border-color: var(--gray-light);
+    }
 
-        .search-input {
-            flex: 1;
-            padding: 0.75rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
+    .nav-item.active {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(196, 191, 42, 0.3);
+      border-color: var(--primary);
+    }
 
-        .search-input:focus {
-            outline: none;
-            border-color: #4f46e5;
-        }
+    .nav-item.active:hover {
+      transform: translateX(5px);
+      background: linear-gradient(135deg, var(--primary-dark) 0%, #8f8b1e 100%);
+    }
 
-        .btn-primary {
-            padding: 0.75rem 1.5rem;
-            background: #429111;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
+    .nav-icon {
+      font-size: 1.2rem;
+    }
 
-        .search-results {
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+    }
 
-        .result-item {
-            padding: 1rem;
-            border-bottom: 1px solid #e5e7eb;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
+    .content-section {
+      display: none;
+      animation: fadeIn 0.5s ease-out;
+    }
 
-        .result-item:hover {
-            background: #f9fafb;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        .result-item:last-child {
-            border-bottom: none;
-        }
+    .content-section.active {
+      display: block;
+    }
 
-        .student-info {
-            background: #f0f9ff;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
+    /* Section Headers */
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+    }
 
-        .book-search {
-            margin-bottom: 1.5rem;
-        }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      border-radius: 2px;
+    }
 
-        .book-results {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
+    .section-subtitle {
+      color: var(--gray);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      max-width: 800px;
+    }
 
-        .book-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+    /* Cards */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--gray-light);
+      transition: var(--transition);
+    }
 
-        .book-card:hover {
-            border-color: #4f46e5;
-            transform: translateY(-2px);
-        }
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+    }
 
-        .book-card.selected {
-            border-color: #4f46e5;
-            background: #f0f9ff;
-        }
+    .card-header {
+      margin-bottom: 1.5rem;
+    }
 
-        .loan-summary {
-            background: #f0f9ff;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-top: 1.5rem;
-        }
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+    }
 
-        .btn-success {
-            padding: 0.75rem 1.5rem;
-            background: #10b981;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
+    .card-description {
+      color: var(--gray);
+      font-size: 0.95rem;
+    }
 
-        .hidden {
-            display: none;
-        }
+    /* Search */
+    .search-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
 
-        /* ----------------------------------------------------- */
-        /* --- MEDIA QUERIES PARA RESPONSIVIDAD (MÓVIL) --- */
-        /* ----------------------------------------------------- */
+    .search-input {
+      width: 100%;
+      padding: 1rem 1.5rem 1rem 3.5rem;
+      border: 2px solid var(--gray-light);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      background: var(--white);
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+    }
 
-        @media (max-width: 768px) {
-            
-            .header {
-                padding: 1rem;
-                flex-wrap: wrap; 
-            }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(196, 191, 42, 0.1);
+    }
 
-            .user-info {
-                width: 100%; 
-                margin-top: 0.5rem;
-                justify-content: space-between;
-            }
+    .search-icon {
+      position: absolute;
+      left: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+      font-size: 1.2rem;
+    }
 
-            .user-details {
-                text-align: left;
-            }
-            
-            .main-container {
-                flex-direction: column;
-            }
+    /* Buttons */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      box-shadow: var(--shadow);
+    }
 
-            .sidebar {
-                width: 100%;
-                padding: 1rem 0.5rem;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                display: flex;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+      color: var(--white);
+    }
 
-            .nav-item {
-                flex-shrink: 0;
-                margin-bottom: 0;
-                margin-right: 0.5rem;
-                font-size: 0.9rem;
-            }
-            
-            .content {
-                padding: 1rem;
-            }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(66, 145, 17, 0.3);
+    }
 
-            .section-title {
-                margin-bottom: 1rem;
-                font-size: 1.3rem;
-            }
-            
-            .search-container {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .book-results {
-                grid-template-columns: 1fr; 
-            }
-        }
-    </style>
+    .btn-success {
+      background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
+      color: var(--white);
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-warning {
+      background: linear-gradient(135deg, var(--warning) 0%, var(--warning-dark) 100%);
+      color: var(--white);
+    }
+
+    .btn-warning:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%);
+      color: var(--white);
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Requests List */
+    .requests-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-height: 500px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .request-item {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--gray-light);
+      transition: var(--transition);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .request-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+    }
+
+    .request-content {
+      flex: 1;
+    }
+
+    .request-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .request-details {
+      color: var(--gray);
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .request-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--gray);
+      margin-top: 0.5rem;
+    }
+
+    .request-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    /* Status Badges */
+    .status-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--white);
+      display: inline-block;
+    }
+
+    .badge-pendiente {
+      background: linear-gradient(135deg, var(--warning) 0%, var(--warning-dark) 100%);
+    }
+
+    .badge-aprobado {
+      background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
+    }
+
+    .badge-activo {
+      background: linear-gradient(135deg, var(--info) 0%, var(--info-dark) 100%);
+    }
+
+    .badge-atrasado {
+      background: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%);
+    }
+
+    .badge-devuelto {
+      background: linear-gradient(135deg, var(--gray) 0%, #4b5563 100%);
+    }
+
+    /* Book Cards */
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .book-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border: 1px solid var(--gray-light);
+    }
+
+    .book-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+    }
+
+    .book-image {
+      height: 180px;
+      overflow: hidden;
+    }
+
+    .book-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .book-card:hover .book-image img {
+      transform: scale(1.05);
+    }
+
+    .book-info {
+      padding: 1.5rem;
+    }
+
+    .book-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .book-details {
+      color: var(--gray);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .book-status-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Fines */
+    .fines-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .fine-item {
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      border: 1px solid var(--gray-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fine-item.atrasado {
+      border-left: 4px solid var(--danger);
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    }
+
+    .fine-content h4 {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .fine-details {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    .fine-amount {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--danger);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--gray-light);
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray);
+      transition: var(--transition);
+    }
+
+    .modal-close:hover {
+      color: var(--danger);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--gray-light);
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(196, 191, 42, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+    }
+
+    .student-search-results {
+      margin-top: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid var(--gray-light);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+    }
+
+    .student-result-item {
+      padding: 1rem;
+      border-bottom: 1px solid var(--gray-light);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .student-result-item:hover {
+      background: var(--light);
+    }
+
+    .student-result-item.selected {
+      background: linear-gradient(135deg, rgba(66, 145, 17, 0.1) 0%, rgba(102, 126, 234, 0.1) 100%);
+      border-left: 4px solid var(--secondary);
+    }
+
+    /* Student Details in Fines */
+    .student-info-card {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e1f5fe 100%);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--info);
+    }
+
+    .student-info-card h4 {
+      color: var(--info-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 2px dashed var(--gray-light);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: var(--gray-light);
+      margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+      color: var(--gray);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+      color: var(--gray);
+      font-size: 0.95rem;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--gray);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--gray-light);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .inventory-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 1rem;
+        flex-direction: row;
+        overflow-x: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--gray-light);
+      }
+
+      .nav-item {
+        flex-shrink: 0;
+        margin: 0;
+        padding: 0.75rem 1rem;
+      }
+
+      .content {
+        padding: 1.5rem;
+      }
+
+      .header {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      .user-container {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .logo-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .request-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .request-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .request-actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .modal {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .inventory-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-item {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .user-profile {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .user-details {
+        text-align: center;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo-container">
-            <div class="logo"><img src="img/inacap-logo.png" alt="Logo Institución"></div>
-            <div>
-                <h3>Sistema de Gestión de Biblioteca Digital</h3>
-                <small>Módulo Bibliotecario</small>
-            </div>
-        </div>
-        <div id="dashboard-header">
-            <div class="user-details">
-                <p>Bienvenido(a): <strong id="userName"></strong> (<span id="userRole"></span>)</p>
-                <small id="lastAccess"></small>
-            </div>
-            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
-        </div>
-    </header>
-
-    <div class="main-container">
-        <nav class="sidebar">
-            <div class="nav-item active" onclick="showSection('prestamos')">📚 Realizar Préstamo</div>
-            <div class="nav-item" onclick="showSection('devoluciones')">↩️ Registrar Devolución</div>
-            <div class="nav-item" onclick="showSection('reservas')">📅 Gestionar Reservas</div>
-            <div class="nav-item" onclick="showSection('reportes')">📊 Reportes</div>
-        </nav>
-
-        <main class="content">
-            <div id="prestamos" class="content-section active">
-                <h2 class="section-title">Realizar Préstamo de Libros</h2>
-                
-                <div class="card">
-                    <h3>Buscar Estudiante</h3>
-                    <div class="search-container">
-                        <input type="text" id="studentSearch" class="search-input" 
-                               placeholder="Buscar por RUT, nombre o email..." 
-                               onkeyup="searchStudents()">
-                        <button class="btn-primary" onclick="searchStudents()">Buscar</button>
-                    </div>
-                    
-                    <div id="studentResults" class="search-results hidden">
-                        </div>
-                    
-                    <div id="selectedStudent" class="student-info hidden">
-                        <h4>Estudiante Seleccionado</h4>
-                        <div id="studentDetails"></div>
-                    </div>
-                </div>
-
-                <div id="bookSection" class="hidden">
-                    <div class="card">
-                        <h3>Buscar Libros</h3>
-                        <div class="book-search">
-                            <input type="text" id="bookSearch" class="search-input" 
-                                   placeholder="Buscar por título, autor o ISBN..." 
-                                   onkeyup="searchBooks()">
-                        </div>
-                        
-                        <div id="bookResults" class="book-results">
-                            </div>
-                    </div>
-
-                    <div id="loanSummary" class="loan-summary hidden">
-                        <h4>Resumen del Préstamo</h4>
-                        <div id="summaryDetails"></div>
-                        <button class="btn-success" onclick="confirmLoan()">Confirmar Préstamo</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="devoluciones" class="content-section">
-                <h2 class="section-title">Registrar Devolución</h2>
-                <p>Módulo en desarrollo...</p>
-            </div>
-
-            <div id="reservas" class="content-section">
-                <h2 class="section-title">Gestionar Reservas</h2>
-                <p>Módulo en desarrollo...</p>
-            </div>
-
-            <div id="reportes" class="content-section">
-                <h2 class="section-title">Reportes y Estadísticas</h2>
-                <p>Módulo en desarrollo...</p>
-            </div>
-        </main>
+  <header class="header">
+    <div class="logo-container">
+      <div class="logo">
+        <img src="img/inacap-logo.png" alt="Logo INACAP">
+      </div>
+      <div class="header-info">
+        <h3>Sistema de Gestión de Biblioteca Digital</h3>
+        <small>Módulo Bibliotecario</small>
+      </div>
     </div>
+
+    <div class="user-container">
+      <div class="user-profile">
+        <div class="user-avatar" id="userAvatar">B</div>
+        <div class="user-details">
+          <div class="user-name" id="userName">Bibliotecario</div>
+          <div class="user-role" id="userRole">Bibliotecario</div>
+          <div class="last-access" id="lastAccess"></div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="logout()">
+        <span>🚪</span> Cerrar Sesión
+      </button>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <nav class="sidebar">
+      <div class="nav-item active" onclick="showSection('solicitudes', this)">
+        <span class="nav-icon">📝</span>
+        <span>Solicitudes Pendientes</span>
+      </div>
+      <div class="nav-item" onclick="showSection('prestamos', this)">
+        <span class="nav-icon">📚</span>
+        <span>Gestionar Préstamos</span>
+      </div>
+      <div class="nav-item" onclick="showSection('devoluciones', this)">
+        <span class="nav-icon">↩️</span>
+        <span>Registrar Devolución</span>
+      </div>
+      <div class="nav-item" onclick="showSection('inventario', this)">
+        <span class="nav-icon">📖</span>
+        <span>Inventario de Libros</span>
+      </div>
+      <div class="nav-item" onclick="showSection('multas', this)">
+        <span class="nav-icon">💰</span>
+        <span>Gestión de Multas</span>
+      </div>
+    </nav>
+
+    <main class="content">
+      <!-- SOLICITUDES PENDIENTES -->
+      <section id="solicitudes" class="content-section active">
+        <h1 class="section-title">📝 Solicitudes de Préstamo Pendientes</h1>
+        <p class="section-subtitle">Aquí aparecen las solicitudes que los estudiantes han realizado. Puede <strong>aprobar</strong> (se crea un préstamo por 7 días) o <strong>rechazar</strong> la solicitud.</p>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Solicitudes en espera</h2>
+            <p class="card-description">Total de solicitudes pendientes: <span id="totalSolicitudes">0</span></p>
+          </div>
+          <div class="requests-list" id="requestsList"></div>
+        </div>
+      </section>
+
+      <!-- GESTIONAR PRÉSTAMOS -->
+      <section id="prestamos" class="content-section">
+        <h1 class="section-title">📚 Préstamos Activos</h1>
+        <p class="section-subtitle">Gestión y seguimiento de todos los préstamos activos en el sistema</p>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Búsqueda de préstamos</h2>
+            <p class="card-description">Busque por estudiante, libro o estado</p>
+          </div>
+          <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchPrestamos" class="search-input" placeholder="Buscar por estudiante, libro o estado..." onkeyup="filtrarPrestamos()">
+          </div>
+          <div class="requests-list" id="prestamosActivosList"></div>
+        </div>
+      </section>
+
+      <!-- DEVOLUCIONES -->
+      <section id="devoluciones" class="content-section">
+        <h1 class="section-title">↩️ Registrar Devolución</h1>
+        <p class="section-subtitle">Seleccione un préstamo activo y márquelo como devuelto. Si está fuera de plazo puede generar una multa automáticamente.</p>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Préstamos pendientes de devolución</h2>
+            <p class="card-description">Total de préstamos activos: <span id="totalPrestamos">0</span></p>
+          </div>
+          <div class="requests-list" id="devolucionesList"></div>
+        </div>
+      </section>
+
+      <!-- INVENTARIO -->
+      <section id="inventario" class="content-section">
+        <h1 class="section-title">📖 Inventario de Libros</h1>
+        <p class="section-subtitle">Gestión completa del catálogo de libros disponibles en la biblioteca</p>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Búsqueda en inventario</h2>
+            <p class="card-description">Busque libros por título, autor, categoría o ISBN</p>
+          </div>
+          <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInventario" class="search-input" placeholder="Buscar por título, autor, categoría o ISBN..." onkeyup="renderInventario()">
+          </div>
+          <div class="inventory-grid" id="inventarioList"></div>
+        </div>
+      </section>
+
+      <!-- MULTAS -->
+      <section id="multas" class="content-section">
+        <h1 class="section-title">💰 Gestión de Multas</h1>
+        <p class="section-subtitle">Multas pendientes y generadas por retraso en devoluciones</p>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Agregar Multa Manual</h2>
+            <p class="card-description">Busque un estudiante y asigne una multa por infracción</p>
+          </div>
+          
+          <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchEstudianteMulta" class="search-input" placeholder="Buscar estudiante por nombre, ID o carrera..." onkeyup="buscarEstudiantesParaMulta()">
+          </div>
+          
+          <div id="studentSearchResults" class="student-search-results" style="display: none;">
+            <!-- Los resultados de búsqueda aparecerán aquí -->
+          </div>
+          
+          <div id="selectedStudentInfo" class="student-info-card" style="display: none;">
+            <h4>Estudiante Seleccionado</h4>
+            <p id="selectedStudentName"></p>
+            <p id="selectedStudentCareer"></p>
+            <button class="btn btn-warning" onclick="mostrarFormularioMulta()" style="margin-top: 1rem;">
+              <span>💰</span> Asignar Multa a este Estudiante
+            </button>
+          </div>
+          
+          <div style="margin-top: 2rem; text-align: center;">
+            <button class="btn btn-primary" onclick="mostrarModalBusqueda()">
+              <span>➕</span> Buscar y Asignar Multa
+            </button>
+          </div>
+        </div>
+        
+        <div class="card" style="margin-top: 2rem;">
+          <div class="card-header">
+            <h2 class="card-title">Multas pendientes</h2>
+            <p class="card-description">Total de multas pendientes: <span id="totalMultas">0</span></p>
+          </div>
+          <div class="fines-container" id="multasList"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal para asignar multa -->
+  <div id="multaModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">💰 Asignar Multa</h2>
+        <button class="modal-close" onclick="cerrarModalMulta()">×</button>
+      </div>
+      
+      <div id="modalContent">
+        <!-- Contenido dinámico del modal -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Datos del bibliotecario actual
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    let selectedStudent = null;
     
-    <script>
-        // --- JS para bibliotecario.html (Dashboard de la Biblioteca) ---
-
-        // ⭐ Datos de ejemplo para el sistema de biblioteca
-        const students = [
-            { id: 1, rut: '12345678-9', name: 'Juan Pérez', email: 'juan.perez@inacap.cl', career: 'Ingeniería Informática' },
-            { id: 2, rut: '98765432-1', name: 'María Rodríguez', email: 'maria.rodriguez@inacap.cl', career: 'Administración' },
-            { id: 3, rut: '45678912-3', name: 'Carlos López', email: 'carlos.lopez@inacap.cl', career: 'Contabilidad' },
-            { id: 4, rut: '32165498-7', name: 'Ana Silva', email: 'ana.silva@inacap.cl', career: 'Diseño Gráfico' },
-            { id: 5, rut: '78912345-6', name: 'Pedro González', email: 'pedro.gonzalez@inacap.cl', career: 'Ingeniería Civil' }
-        ];
-
-        const books = [
-            { id: 1, isbn: '978-84-376-0494-7', title: 'Cien años de soledad', author: 'Gabriel García Márquez', available: true },
-            { id: 2, isbn: '978-84-9759-327-8', title: '1984', author: 'George Orwell', available: true },
-            { id: 3, isbn: '978-84-206-7271-9', title: 'El Principito', author: 'Antoine de Saint-Exupéry', available: false },
-            { id: 4, isbn: '978-84-9838-141-2', title: 'Don Quijote de la Mancha', author: 'Miguel de Cervantes', available: true },
-            { id: 5, isbn: '978-84-206-7324-2', title: 'Orgullo y prejuicio', author: 'Jane Austen', available: true },
-            { id: 6, isbn: '978-84-376-0484-8', title: 'Crónica de una muerte anunciada', author: 'Gabriel García Márquez', available: true }
-        ];
-
-        let selectedStudent = null;
-        let selectedBooks = [];
-
-        // --- Funciones de Lógica de la Biblioteca (Búsqueda, Selección, Préstamo) ---
-
-        function showSection(sectionId) {
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
-            
-            // Lógica para actualizar el estado 'active' de la navegación
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                // Comprobación para evitar errores si el evento es nulo (e.g., al inicio)
-                if (event && event.target && item === event.target) {
-                     item.classList.add('active');
-                } else if (!event && item.textContent.includes('Préstamo')) {
-                    // Si no hay evento (al iniciar), activar Préstamos
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
+    // Funciones principales
+    function showSection(sectionId, element) {
+      // Remover active de todas las secciones
+      document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      
+      // Agregar active a la sección seleccionada
+      document.getElementById(sectionId).classList.add('active');
+      element.classList.add('active');
+      
+      // Actualizar la sección mostrada
+      if(sectionId === 'solicitudes') renderSolicitudes();
+      else if(sectionId === 'prestamos') renderPrestamosActivos();
+      else if(sectionId === 'devoluciones') renderDevoluciones();
+      else if(sectionId === 'inventario') renderInventario();
+      else if(sectionId === 'multas') renderMultas();
+    }
+    
+    // ⭐ Mostrar solicitudes pendientes
+    function renderSolicitudes() {
+      const container = document.getElementById('requestsList');
+      const solicitudes = JSON.parse(localStorage.getItem('solicitudes')) || [];
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const books = JSON.parse(localStorage.getItem('books')) || [];
+      const prestamos = JSON.parse(localStorage.getItem('prestamos')) || [];
+      
+      const solicitudesPendientes = solicitudes.filter(s => s.estado === 'pendiente');
+      
+      // Actualizar contador
+      document.getElementById('totalSolicitudes').textContent = solicitudesPendientes.length;
+      
+      if(solicitudesPendientes.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div>📭</div>
+            <h3>No hay solicitudes pendientes</h3>
+            <p>Todas las solicitudes han sido procesadas</p>
+          </div>
+        `;
+        return;
+      }
+      
+      container.innerHTML = solicitudesPendientes.map(s => {
+        const estudiante = users.find(u => u.id === s.estudianteId);
+        const libro = books.find(b => b.id === s.libroId);
+        
+        // ✅ VERIFICAR LÍMITE DE 2 LIBROS DEL ESTUDIANTE
+        const prestamosEstudiante = prestamos.filter(p => 
+            p.estudianteId === s.estudianteId && 
+            p.estado === 'activo'
+        ).length;
+        
+        const tieneLimite = prestamosEstudiante >= 2;
+        
+        return `
+          <div class="request-item ${tieneLimite ? 'atrasado' : ''}">
+            <div class="request-content">
+              <h3 class="request-title">${libro ? libro.title : 'Libro no encontrado'}</h3>
+              <p class="request-details">✍️ Autor: ${libro ? libro.author : 'N/A'}</p>
+              <p class="request-details">👤 Estudiante: ${estudiante ? estudiante.name : 'N/A'}</p>
+              <p class="request-details">🎓 Carrera: ${estudiante ? estudiante.career || 'No especificada' : 'N/A'}</p>
+              ${tieneLimite ? `<p class="request-details" style="color:var(--danger); font-weight:600;">⚠️ ESTUDIANTE TIENE ${prestamosEstudiante}/2 LIBROS</p>` : ''}
+              <div class="request-meta">
+                <span>📅 ${s.fecha}</span>
+                <span>⏰ Solicitud pendiente</span>
+              </div>
+            </div>
+            <div class="request-actions">
+              <button class="btn btn-success" onclick="aprobarSolicitud(${s.id})" ${tieneLimite ? 'disabled style="opacity:0.5;"' : ''}>
+                <span>✅</span> ${tieneLimite ? 'Límite alcanzado' : 'Aprobar'}
+              </button>
+              <button class="btn btn-danger" onclick="rechazarSolicitud(${s.id})">
+                <span>❌</span> Rechazar
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // ⭐ Aprobar solicitud
+    function aprobarSolicitud(solicitudId) {
+      let solicitudes = JSON.parse(localStorage.getItem('solicitudes')) || [];
+      let prestamos = JSON.parse(localStorage.getItem('prestamos')) || [];
+      let books = JSON.parse(localStorage.getItem('books')) || [];
+      let notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
+      
+      const solicitudIndex = solicitudes.findIndex(s => s.id === solicitudId);
+      if(solicitudIndex === -1) return;
+      
+      const solicitud = solicitudes[solicitudIndex];
+      
+      // ✅ VERIFICAR LÍMITE DE 2 LIBROS POR ESTUDIANTE
+      const prestamosEstudiante = prestamos.filter(p => 
+          p.estudianteId === solicitud.estudianteId && 
+          p.estado === 'activo'
+      ).length;
+      
+      if (prestamosEstudiante >= 2) {
+          alert(`❌ El estudiante ${solicitud.estudianteNombre} ya tiene 2 libros en préstamo. 
+                 No puede solicitar más hasta que devuelva alguno.`);
+          
+          // Rechazar automáticamente la solicitud
+          solicitudes[solicitudIndex].estado = 'rechazado';
+          solicitudes[solicitudIndex].motivoRechazo = 'Límite de 2 libros alcanzado';
+          localStorage.setItem('solicitudes', JSON.stringify(solicitudes));
+          
+          // Notificar al estudiante
+          notificaciones.push({
+              id: Date.now(),
+              estudianteId: solicitud.estudianteId,
+              mensaje: `❌ Tu solicitud para "${solicitud.libroTitulo}" fue rechazada porque ya tienes 2 libros en préstamo. Devuelve uno para solicitar más.`,
+              tipo: 'rechazo',
+              fecha: new Date().toLocaleString(),
+              leida: false
+          });
+          localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+          
+          alert('La solicitud ha sido rechazada automáticamente por límite de libros.');
+          renderSolicitudes();
+          return;
+      }
+      
+      // Crear préstamo por 7 días
+      const fechaPrestamo = new Date();
+      const fechaDevolucion = new Date();
+      fechaDevolucion.setDate(fechaDevolucion.getDate() + 7);
+      
+      const nuevoPrestamo = {
+        id: Date.now(),
+        libroId: solicitud.libroId,
+        libroTitulo: solicitud.libroTitulo,
+        estudianteId: solicitud.estudianteId,
+        estudianteNombre: solicitud.estudianteNombre,
+        fechaPrestamo: fechaPrestamo.toLocaleString(),
+        fechaDevolucion: fechaDevolucion.toLocaleDateString(),
+        estado: 'activo',
+        multa: 0
+      };
+      
+      prestamos.push(nuevoPrestamo);
+      
+      // Actualizar estado de la solicitud
+      solicitudes[solicitudIndex].estado = 'aprobado';
+      solicitudes[solicitudIndex].fechaAprobacion = new Date().toLocaleString();
+      
+      // ✅ Marcar libro como no disponible
+      const libroIndex = books.findIndex(b => b.id === solicitud.libroId);
+      if(libroIndex !== -1) {
+        books[libroIndex].available = false;
+      }
+      
+      // Crear notificación para el estudiante
+      notificaciones.push({
+        id: Date.now(),
+        estudianteId: solicitud.estudianteId,
+        mensaje: `✅ Tu solicitud para "${solicitud.libroTitulo}" ha sido APROBADA. Fecha límite de devolución: ${fechaDevolucion.toLocaleDateString()}`,
+        tipo: 'aprobacion',
+        fecha: new Date().toLocaleString(),
+        leida: false
+      });
+      
+      // Guardar todo
+      localStorage.setItem('solicitudes', JSON.stringify(solicitudes));
+      localStorage.setItem('prestamos', JSON.stringify(prestamos));
+      localStorage.setItem('books', JSON.stringify(books));
+      localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+      
+      alert('✅ Préstamo aprobado por 7 días.');
+      renderSolicitudes();
+      renderPrestamosActivos();
+      renderDevoluciones();
+    }
+    
+    // ⭐ Rechazar solicitud
+    function rechazarSolicitud(solicitudId) {
+      let solicitudes = JSON.parse(localStorage.getItem('solicitudes')) || [];
+      let books = JSON.parse(localStorage.getItem('books')) || [];
+      let notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
+      
+      const solicitudIndex = solicitudes.findIndex(s => s.id === solicitudId);
+      if(solicitudIndex === -1) return;
+      
+      const solicitud = solicitudes[solicitudIndex];
+      
+      // Actualizar estado de la solicitud
+      solicitudes[solicitudIndex].estado = 'rechazado';
+      solicitudes[solicitudIndex].fechaRechazo = new Date().toLocaleString();
+      
+      // Marcar libro como disponible
+      const libroIndex = books.findIndex(b => b.id === solicitud.libroId);
+      if(libroIndex !== -1) {
+        books[libroIndex].available = true;
+      }
+      
+      // Crear notificación para el estudiante
+      notificaciones.push({
+        id: Date.now(),
+        estudianteId: solicitud.estudianteId,
+        mensaje: `❌ Tu solicitud para "${solicitud.libroTitulo}" ha sido RECHAZADA.`,
+        tipo: 'rechazo',
+        fecha: new Date().toLocaleString(),
+        leida: false
+      });
+      
+      // Guardar todo
+      localStorage.setItem('solicitudes', JSON.stringify(solicitudes));
+      localStorage.setItem('books', JSON.stringify(books));
+      localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+      
+      alert('❌ Solicitud rechazada.');
+      renderSolicitudes();
+    }
+    
+    // ⭐ Mostrar préstamos activos
+    function renderPrestamosActivos() {
+      const container = document.getElementById('prestamosActivosList');
+      const prestamos = JSON.parse(localStorage.getItem('prestamos')) || [];
+      
+      const prestamosActivos = prestamos.filter(p => p.estado === 'activo' || p.estado === 'atrasado');
+      
+      if(prestamosActivos.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div>📚</div>
+            <h3>No hay préstamos activos</h3>
+            <p>Todos los libros están disponibles</p>
+          </div>
+        `;
+        return;
+      }
+      
+      container.innerHTML = prestamosActivos.map(p => {
+        const fechaDevolucion = new Date(p.fechaDevolucion);
+        const hoy = new Date();
+        const atrasado = hoy > fechaDevolucion;
+        const diasAtraso = atrasado ? Math.floor((hoy - fechaDevolucion) / (1000 * 60 * 60 * 24)) : 0;
+        
+        return `
+          <div class="request-item ${atrasado ? 'atrasado' : ''}">
+            <div class="request-content">
+              <h3 class="request-title">${p.libroTitulo}</h3>
+              <p class="request-details">👤 Estudiante: ${p.estudianteNombre}</p>
+              <p class="request-details">📅 Préstamo: ${p.fechaPrestamo}</p>
+              <p class="request-details">⏰ Devuelve: ${p.fechaDevolucion}</p>
+              ${atrasado ? `<p class="request-details" style="color:var(--danger);">⚠️ Atraso: ${diasAtraso} días</p>` : ''}
+            </div>
+            <div>
+              <span class="status-badge ${atrasado ? 'badge-atrasado' : 'badge-activo'}">
+                ${atrasado ? 'ATRASADO' : 'ACTIVO'}
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // ⭐ Filtrar préstamos
+    function filtrarPrestamos() {
+      const search = document.getElementById('searchPrestamos').value.toLowerCase();
+      const items = document.querySelectorAll('#prestamosActivosList .request-item');
+      
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(search) ? 'flex' : 'none';
+      });
+    }
+    
+    // ⭐ Mostrar devoluciones pendientes
+    function renderDevoluciones() {
+      const container = document.getElementById('devolucionesList');
+      const prestamos = JSON.parse(localStorage.getItem('prestamos')) || [];
+      
+      const prestamosPorDevolver = prestamos.filter(p => p.estado === 'activo' || p.estado === 'atrasado');
+      
+      // Actualizar contador
+      document.getElementById('totalPrestamos').textContent = prestamosPorDevolver.length;
+      
+      if(prestamosPorDevolver.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div>📚</div>
+            <h3>No hay préstamos pendientes de devolución</h3>
+            <p>Todos los libros han sido devueltos</p>
+          </div>
+        `;
+        return;
+      }
+      
+      container.innerHTML = prestamosPorDevolver.map(p => {
+        const fechaDevolucion = new Date(p.fechaDevolucion);
+        const hoy = new Date();
+        const atrasado = hoy > fechaDevolucion;
+        const diasAtraso = atrasado ? Math.floor((hoy - fechaDevolucion) / (1000 * 60 * 60 * 24)) : 0;
+        const multa = atrasado ? diasAtraso * 1000 : 0; // $1000 por día de atraso
+        
+        return `
+          <div class="request-item ${atrasado ? 'atrasado' : ''}">
+            <div class="request-content">
+              <h3 class="request-title">${p.libroTitulo}</h3>
+              <p class="request-details">👤 Estudiante: ${p.estudianteNombre}</p>
+              <p class="request-details">📅 Devuelve: ${p.fechaDevolucion}</p>
+              ${atrasado ? `
+                <p class="request-details" style="color:var(--danger);">
+                  ⚠️ Atraso: ${diasAtraso} días | Multa: $${multa}
+                </p>
+              ` : ''}
+            </div>
+            <div class="request-actions">
+              <button class="btn btn-success" onclick="registrarDevolucion(${p.id}, ${multa})">
+                <span>✅</span> Registrar Devolución
+              </button>
+              ${atrasado ? `
+                <button class="btn btn-warning" onclick="generarMulta(${p.id}, ${multa}, ${diasAtraso})">
+                  <span>💰</span> Generar Multa
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // ⭐ Registrar devolución
+    function registrarDevolucion(prestamoId, multa) {
+      let prestamos = JSON.parse(localStorage.getItem('prestamos')) || [];
+      let books = JSON.parse(localStorage.getItem('books')) || [];
+      let notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
+      let multas = JSON.parse(localStorage.getItem('multas')) || [];
+      
+      const prestamoIndex = prestamos.findIndex(p => p.id === prestamoId);
+      if(prestamoIndex === -1) return;
+      
+      const prestamo = prestamos[prestamoIndex];
+      
+      // ✅ IMPORTANTE: Marcar libro como disponible
+      const libroIndex = books.findIndex(b => b.id === prestamo.libroId);
+      if(libroIndex !== -1) {
+        books[libroIndex].available = true; // ✅ LIBERAR EL LIBRO
+        books[libroIndex].lastDevolucion = new Date().toLocaleString();
+      }
+      
+      // Actualizar estado del préstamo
+      prestamos[prestamoIndex].estado = 'devuelto';
+      prestamos[prestamoIndex].fechaDevolucionReal = new Date().toLocaleString();
+      
+      // Si hay multa, generarla
+      if(multa > 0) {
+        const nuevaMulta = {
+          id: Date.now(),
+          prestamoId: prestamoId,
+          estudianteId: prestamo.estudianteId,
+          estudianteNombre: prestamo.estudianteNombre,
+          libroTitulo: prestamo.libroTitulo,
+          monto: multa,
+          diasAtraso: Math.floor(multa / 1000),
+          fecha: new Date().toLocaleString(),
+          estado: 'pendiente',
+          motivo: 'Atraso en devolución'
+        };
+        
+        multas.push(nuevaMulta);
+        
+        // Notificación al estudiante
+        notificaciones.push({
+          id: Date.now(),
+          estudianteId: prestamo.estudianteId,
+          mensaje: `💰 Tienes una multa de $${multa} por atraso en la devolución de "${prestamo.libroTitulo}"`,
+          tipo: 'multa',
+          fecha: new Date().toLocaleString(),
+          leida: false
+        });
+        
+        localStorage.setItem('multas', JSON.stringify(multas));
+      }
+      
+      // ✅ NOTIFICAR AL ESTUDIANTE QUE YA PUEDE SOLICITAR OTRO LIBRO
+      notificaciones.push({
+        id: Date.now(),
+        estudianteId: prestamo.estudianteId,
+        mensaje: `✅ Has devuelto "${prestamo.libroTitulo}" correctamente. 
+                 Ahora puedes solicitar otro libro (máximo 2 en total).`,
+        tipo: 'devolucion',
+        fecha: new Date().toLocaleString(),
+        leida: false
+      });
+      
+      // Guardar todo
+      localStorage.setItem('prestamos', JSON.stringify(prestamos));
+      localStorage.setItem('books', JSON.stringify(books));
+      localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+      
+      alert('✅ Devolución registrada correctamente. El estudiante puede solicitar otro libro.');
+      renderDevoluciones();
+      renderPrestamosActivos();
+      renderMultas();
+      renderInventario();
+    }
+    
+    // ⭐ Generar multa por atraso
+    function generarMulta(prestamoId, monto, diasAtraso) {
+      let multas = JSON.parse(localStorage.getItem('multas')) || [];
+      let prestamos = JSON.parse(localStorage.getItem('prestamos')) || [];
+      let notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
+      
+      const prestamo = prestamos.find(p => p.id === prestamoId);
+      if(!prestamo) return;
+      
+      // Verificar si ya existe multa para este préstamo
+      const multaExistente = multas.find(m => m.prestamoId === prestamoId);
+      if(multaExistente) {
+        alert('Ya existe una multa para este préstamo.');
+        return;
+      }
+      
+      const nuevaMulta = {
+        id: Date.now(),
+        prestamoId: prestamoId,
+        estudianteId: prestamo.estudianteId,
+        estudianteNombre: prestamo.estudianteNombre,
+        libroTitulo: prestamo.libroTitulo,
+        monto: monto,
+        diasAtraso: diasAtraso,
+        fecha: new Date().toLocaleString(),
+        estado: 'pendiente',
+        motivo: 'Atraso en devolución'
+      };
+      
+      multas.push(nuevaMulta);
+      
+      // Notificación al estudiante
+      notificaciones.push({
+        id: Date.now(),
+        estudianteId: prestamo.estudianteId,
+        mensaje: `⚠️ Tienes una multa de $${monto} por ${diasAtraso} días de atraso en "${prestamo.libroTitulo}"`,
+        tipo: 'multa',
+        fecha: new Date().toLocaleString(),
+        leida: false
+      });
+      
+      localStorage.setItem('multas', JSON.stringify(multas));
+      localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+      
+      alert(`💰 Multa de $${monto} generada por ${diasAtraso} días de atraso.`);
+      renderMultas();
+    }
+    
+    // ⭐ Mostrar inventario
+    function renderInventario() {
+      const container = document.getElementById('inventarioList');
+      const books = JSON.parse(localStorage.getItem('books')) || [];
+      const prestamos = JSON.parse(localStorage.getItem('prestamos')) || [];
+      const search = document.getElementById('searchInventario').value.toLowerCase();
+      
+      // Mostrar loading
+      container.innerHTML = `
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <p>Cargando inventario...</p>
+        </div>
+      `;
+      
+      setTimeout(() => {
+        // Filtrar libros según búsqueda
+        const filteredBooks = books.filter(b =>
+          b.title.toLowerCase().includes(search) ||
+          b.author.toLowerCase().includes(search) ||
+          (b.category && b.category.toLowerCase().includes(search)) ||
+          (b.isbn && b.isbn.includes(search))
+        );
+        
+        if(filteredBooks.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div>📚</div>
+              <h3>No se encontraron libros</h3>
+              <p>Intenta con otros términos de búsqueda</p>
+            </div>
+          `;
+          return;
         }
-
-        function searchStudents() {
-            const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
-            const resultsContainer = document.getElementById('studentResults');
-            
-            if (searchTerm.length < 2) {
-                resultsContainer.classList.add('hidden');
-                return;
-            }
-
-            const filteredStudents = students.filter(student => 
-                student.rut.includes(searchTerm) ||
-                student.name.toLowerCase().includes(searchTerm) ||
-                student.email.toLowerCase().includes(searchTerm)
-            );
-
-            displayStudentResults(filteredStudents);
-        }
-
-        function displayStudentResults(students) {
-            const resultsContainer = document.getElementById('studentResults');
-            resultsContainer.innerHTML = '';
-
-            if (students.length === 0) {
-                resultsContainer.innerHTML = '<div class="result-item">No se encontraron estudiantes</div>';
-            } else {
-                students.forEach(student => {
-                    const div = document.createElement('div');
-                    div.className = 'result-item';
-                    div.innerHTML = `
-                        <strong>${student.name}</strong><br>
-                        <small>RUT: ${student.rut} | ${student.email}</small><br>
-                        <small>Carrera: ${student.career}</small>
-                    `;
-                    div.onclick = () => selectStudent(student);
-                    resultsContainer.appendChild(div);
-                });
-            }
-
-            resultsContainer.classList.remove('hidden');
-        }
-
-        function selectStudent(student) {
-            selectedStudent = student;
-            document.getElementById('studentSearch').value = student.name;
-            document.getElementById('studentResults').classList.add('hidden');
-            
-            const studentDetails = document.getElementById('studentDetails');
-            studentDetails.innerHTML = `
-                <p><strong>Nombre:</strong> ${student.name}</p>
-                <p><strong>RUT:</strong> ${student.rut}</p>
-                <p><strong>Email:</strong> ${student.email}</p>
-                <p><strong>Carrera:</strong> ${student.career}</p>
-            `;
-            
-            document.getElementById('selectedStudent').classList.remove('hidden');
-            document.getElementById('bookSection').classList.remove('hidden');
-            
-            selectedBooks = [];
-            document.getElementById('bookSearch').value = '';
-            searchBooks();
-        }
-
-        function searchBooks() {
-            const searchTerm = document.getElementById('bookSearch').value.toLowerCase();
-            
-            const filteredBooks = books.filter(book => 
-                book.title.toLowerCase().includes(searchTerm) ||
-                book.author.toLowerCase().includes(searchTerm) ||
-                book.isbn.includes(searchTerm)
-            );
-
-            displayBookResults(filteredBooks);
-        }
-
-        function displayBookResults(books) {
-            const resultsContainer = document.getElementById('bookResults');
-            resultsContainer.innerHTML = '';
-
-            books.forEach(book => {
-                const div = document.createElement('div');
-                div.className = `book-card ${selectedBooks.find(b => b.id === book.id) ? 'selected' : ''}`;
-                div.innerHTML = `
-                    <strong>${book.title}</strong><br>
-                    <small>Autor: ${book.author}</small><br>
-                    <small>ISBN: ${book.isbn}</small><br>
-                    <small>Disponible: ${book.available ? '✅' : '❌'}</small>
-                `;
-                
-                if (book.available) {
-                    div.onclick = () => toggleBookSelection(book);
-                } else {
-                    div.style.opacity = '0.6';
-                    div.style.cursor = 'not-allowed';
-                }
-                
-                resultsContainer.appendChild(div);
-            });
-        }
-
-        function toggleBookSelection(book) {
-            const index = selectedBooks.findIndex(b => b.id === book.id);
-            
-            if (index === -1) {
-                selectedBooks.push(book);
-            } else {
-                selectedBooks.splice(index, 1);
-            }
-            
-            updateLoanSummary();
-            searchBooks(); 
-        }
-
-        function updateLoanSummary() {
-            const summaryContainer = document.getElementById('loanSummary');
-            const detailsContainer = document.getElementById('summaryDetails');
-            
-            if (!selectedStudent || selectedBooks.length === 0) {
-                summaryContainer.classList.add('hidden');
-                return;
-            }
-            
-            detailsContainer.innerHTML = `
-                <p><strong>Estudiante:</strong> ${selectedStudent.name}</p>
-                <p><strong>Libros seleccionados:</strong></p>
-                <ul>
-                    ${selectedBooks.map(book => `<li>${book.title} - ${book.author}</li>`).join('')}
-                </ul>
-                <p><strong>Total de libros:</strong> ${selectedBooks.length}</p>
-                <p><strong>Fecha de préstamo:</strong> ${new Date().toLocaleDateString()}</p>
-                <p><strong>Fecha de devolución:</strong> ${new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString()}</p>
-            `;
-            
-            summaryContainer.classList.remove('hidden');
-        }
-
-        function confirmLoan() {
-            if (!selectedStudent) {
-                alert('Por favor, primero seleccione un estudiante.');
-                return;
-            }
-
-            if (selectedBooks.length === 0) {
-                alert('Por favor, seleccione al menos un libro');
-                return;
-            }
-            
-            const bookTitles = selectedBooks.map(book => book.title).join(', ');
-            alert(`¡Préstamo realizado con éxito!\n\nEstudiante: ${selectedStudent.name}\nLibros: ${bookTitles}`);
-            
-            selectedBooks.forEach(loanedBook => {
-                const bookIndex = books.findIndex(b => b.id === loanedBook.id);
-                if (bookIndex !== -1) {
-                    books[bookIndex].available = false;
-                }
-            });
-
-            resetLoanForm();
-            searchBooks();
-        }
-
-        function resetLoanForm() {
-            selectedStudent = null;
-            selectedBooks = [];
-            document.getElementById('studentSearch').value = '';
-            document.getElementById('bookSearch').value = '';
-            document.getElementById('selectedStudent').classList.add('hidden');
-            document.getElementById('bookSection').classList.add('hidden');
-            document.getElementById('loanSummary').classList.add('hidden');
-            document.getElementById('studentResults').classList.add('hidden');
-            document.getElementById('studentDetails').innerHTML = '';
-        }
-
-
-        // --- Función de Cierre de Sesión ---
-        function logout() {
-            if (confirm('¿Está seguro que desea cerrar sesión?')) {
-                // Limpiar datos de sesión del usuario
-                localStorage.removeItem('currentUserName');
-                localStorage.removeItem('currentUserRole');
-                localStorage.removeItem('lastAccessTime');
-                
-                // Redirigir de vuelta a la página de login
-                window.location.href = 'index.html'; 
-            }
-        }
-
-        // --- Inicialización del Dashboard ---
-        function initializeDashboard() {
-            const username = localStorage.getItem('currentUserName');
-            const role = localStorage.getItem('currentUserRole');
-            const lastAccess = localStorage.getItem('lastAccessTime');
-            
-            // Verificar sesión y mostrar datos
-            if (username) {
-                document.getElementById('userName').textContent = username;
-                document.getElementById('userRole').textContent = role || 'Bibliotecario'; 
-                document.getElementById('lastAccess').textContent = `Último acceso: ${lastAccess || 'Ahora'}`;
-            } else {
-                // Redirigir si no hay sesión activa
-                window.location.href = 'index.html'; 
-            }
-
-            // Inicializar la vista de libros
-            searchBooks();
-            
-            // Asegurar que las secciones de préstamo estén ocultas al inicio
-            document.getElementById('selectedStudent').classList.add('hidden');
-            document.getElementById('bookSection').classList.add('hidden');
-            document.getElementById('loanSummary').classList.add('hidden');
-            document.getElementById('studentResults').classList.add('hidden');
-        }
-
-        // Iniciar el dashboard al cargar la página
-        document.addEventListener('DOMContentLoaded', initializeDashboard);
-    </script>
+        
+        container.innerHTML = filteredBooks.map(libro => {
+          // Verificar estado del libro
+          const prestamoActivo = prestamos.find(p => p.libroId === libro.id && (p.estado === 'activo' || p.estado === 'atrasado'));
+          const disponible = libro.available && !prestamoActivo;
+          
+          return `
+            <div class="book-card">
+              <div class="book-image">
+                <img src="${libro.img || 'img/book-placeholder.png'}" alt="${libro.title}">
+              </div>
+              <div class="book-info">
+                <h3 class="book-title">${libro.title}</h3>
+                <p class="book-details">✍️ ${libro.author}</p>
+                <p class="book-details">📅 ${libro.year} | 🏷️ ${libro.category || 'General'}</p>
+                <p class="book-details">🔢 ISBN: ${libro.isbn || 'No disponible'}</p>
+                <div class="book-status-container">
+                  <span class="status-badge ${disponible ? 'badge-activo' : 'badge-atrasado'}">
+                    ${disponible ? 'DISPONIBLE' : 'PRESTADO'}
+                  </span>
+                  ${prestamoActivo ? `<span class="book-details">👤 ${prestamoActivo.estudianteNombre}</span>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }, 500); // Simular tiempo de carga
+    }
+    
+    // ⭐ Buscar estudiantes para multa
+    function buscarEstudiantesParaMulta() {
+      const search = document.getElementById('searchEstudianteMulta').value.toLowerCase();
+      const container = document.getElementById('studentSearchResults');
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      
+      // Filtrar solo estudiantes
+      const estudiantes = users.filter(u => u.role === 'estudiante');
+      
+      if (!search) {
+        container.style.display = 'none';
+        return;
+      }
+      
+      const resultados = estudiantes.filter(est => 
+        est.name.toLowerCase().includes(search) || 
+        est.id.toString().includes(search) || 
+        (est.career && est.career.toLowerCase().includes(search)) ||
+        (est.email && est.email.toLowerCase().includes(search))
+      );
+      
+      if(resultados.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="padding: 1rem;">
+            <div>👤</div>
+            <h3>No se encontraron estudiantes</h3>
+            <p>Prueba con otro término de búsqueda</p>
+          </div>
+        `;
+        container.style.display = 'block';
+        return;
+      }
+      
+      container.innerHTML = resultados.map(est => `
+        <div class="student-result-item" onclick="seleccionarEstudiante(${est.id}, '${est.name}', '${est.career || 'No especificada'}')">
+          <h4 style="margin-bottom: 0.25rem;">${est.name}</h4>
+          <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 0.25rem;">🎓 ${est.career || 'Carrera no especificada'}</p>
+          <p style="color: var(--gray); font-size: 0.9rem;">📧 ${est.email || 'Email no especificado'}</p>
+        </div>
+      `).join('');
+      
+      container.style.display = 'block';
+    }
+    
+    // ⭐ Seleccionar estudiante para multa
+    function seleccionarEstudiante(id, name, career) {
+      selectedStudent = { id, name, career };
+      
+      // Actualizar UI
+      document.getElementById('selectedStudentName').textContent = `👤 ${name}`;
+      document.getElementById('selectedStudentCareer').textContent = `🎓 ${career}`;
+      document.getElementById('selectedStudentInfo').style.display = 'block';
+      document.getElementById('studentSearchResults').style.display = 'none';
+      document.getElementById('searchEstudianteMulta').value = '';
+    }
+    
+    // ⭐ Mostrar formulario de multa
+    function mostrarFormularioMulta() {
+      if (!selectedStudent) {
+        alert('Por favor selecciona un estudiante primero.');
+        return;
+      }
+      
+      const modal = document.getElementById('multaModal');
+      const modalContent = document.getElementById('modalContent');
+      
+      modalContent.innerHTML = `
+        <div class="student-info-card" style="margin-bottom: 1.5rem;">
+          <h4>Estudiante Seleccionado</h4>
+          <p><strong>👤 Nombre:</strong> ${selectedStudent.name}</p>
+          <p><strong>🎓 Carrera:</strong> ${selectedStudent.career}</p>
+        </div>
+        
+        <form id="formAgregarMulta">
+          <div class="form-group">
+            <label for="montoMulta" class="form-label">💰 Monto de la Multa ($)</label>
+            <input type="number" id="montoMulta" class="form-input" min="0" step="100" placeholder="Ej: 5000" required>
+            <small style="color: var(--gray); display: block; margin-top: 0.25rem;">Ingresa el monto en pesos chilenos</small>
+          </div>
+          
+          <div class="form-group">
+            <label for="motivoMulta" class="form-label">📝 Motivo de la Multa</label>
+            <select id="motivoMulta" class="form-select" required>
+              <option value="">Selecciona un motivo</option>
+              <option value="Daño a libro">Daño a libro</option>
+              <option value="Pérdida de libro">Pérdida de libro</option>
+              <option value="Atraso en devolución">Atraso en devolución</option>
+              <option value="Comportamiento inadecuado">Comportamiento inadecuado</option>
+              <option value="Otro">Otro motivo</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="descripcionMulta" class="form-label">📋 Descripción Detallada</label>
+            <textarea id="descripcionMulta" class="form-textarea" placeholder="Describe en detalle el motivo de la multa..." required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="fechaMulta" class="form-label">📅 Fecha de la Infracción</label>
+            <input type="date" id="fechaMulta" class="form-input" value="${new Date().toISOString().split('T')[0]}" required>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-danger" onclick="cerrarModalMulta()">
+              <span>❌</span> Cancelar
+            </button>
+            <button type="submit" class="btn btn-success">
+              <span>💰</span> Asignar Multa
+            </button>
+          </div>
+        </form>
+      `;
+      
+      // Configurar el formulario
+      document.getElementById('formAgregarMulta').addEventListener('submit', function(e) {
+        e.preventDefault();
+        asignarMultaManual();
+      });
+      
+      modal.classList.add('active');
+    }
+    
+    // ⭐ Mostrar modal de búsqueda
+    function mostrarModalBusqueda() {
+      const modal = document.getElementById('multaModal');
+      const modalContent = document.getElementById('modalContent');
+      
+      modalContent.innerHTML = `
+        <div class="search-container" style="margin-bottom: 1.5rem;">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchEstudianteModal" class="search-input" placeholder="Buscar estudiante por nombre, ID o carrera..." onkeyup="buscarEstudiantesModal()">
+        </div>
+        
+        <div id="modalSearchResults" class="student-search-results" style="max-height: 300px;">
+          <div class="empty-state" style="padding: 1rem;">
+            <div>👤</div>
+            <h3>Buscar estudiantes</h3>
+            <p>Escribe el nombre, ID o carrera del estudiante</p>
+          </div>
+        </div>
+      `;
+      
+      modal.classList.add('active');
+    }
+    
+    // ⭐ Buscar estudiantes en modal
+    function buscarEstudiantesModal() {
+      const search = document.getElementById('searchEstudianteModal').value.toLowerCase();
+      const container = document.getElementById('modalSearchResults');
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      
+      // Filtrar solo estudiantes
+      const estudiantes = users.filter(u => u.role === 'estudiante');
+      
+      if (!search) {
+        container.innerHTML = `
+          <div class="empty-state" style="padding: 1rem;">
+            <div>👤</div>
+            <h3>Buscar estudiantes</h3>
+            <p>Escribe el nombre, ID o carrera del estudiante</p>
+          </div>
+        `;
+        return;
+      }
+      
+      const resultados = estudiantes.filter(est => 
+        est.name.toLowerCase().includes(search) || 
+        est.id.toString().includes(search) || 
+        (est.career && est.career.toLowerCase().includes(search)) ||
+        (est.email && est.email.toLowerCase().includes(search))
+      );
+      
+      if(resultados.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="padding: 1rem;">
+            <div>👤</div>
+            <h3>No se encontraron estudiantes</h3>
+            <p>Prueba con otro término de búsqueda</p>
+          </div>
+        `;
+        return;
+      }
+      
+      container.innerHTML = resultados.map(est => `
+        <div class="student-result-item" onclick="seleccionarEstudianteModal(${est.id}, '${est.name}', '${est.career || 'No especificada'}')">
+          <h4 style="margin-bottom: 0.25rem;">${est.name}</h4>
+          <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 0.25rem;">🎓 ${est.career || 'Carrera no especificada'}</p>
+          <p style="color: var(--gray); font-size: 0.9rem;">📧 ${est.email || 'Email no especificado'}</p>
+        </div>
+      `).join('');
+    }
+    
+    // ⭐ Seleccionar estudiante en modal
+    function seleccionarEstudianteModal(id, name, career) {
+      selectedStudent = { id, name, career };
+      mostrarFormularioMulta();
+    }
+    
+    // ⭐ Asignar multa manual
+    function asignarMultaManual() {
+      const monto = parseInt(document.getElementById('montoMulta').value);
+      const motivo = document.getElementById('motivoMulta').value;
+      const descripcion = document.getElementById('descripcionMulta').value;
+      const fecha = document.getElementById('fechaMulta').value;
+      
+      if (!selectedStudent || !monto || !motivo || !descripcion || !fecha) {
+        alert('Por favor completa todos los campos.');
+        return;
+      }
+      
+      let multas = JSON.parse(localStorage.getItem('multas')) || [];
+      let notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
+      
+      const nuevaMulta = {
+        id: Date.now(),
+        estudianteId: selectedStudent.id,
+        estudianteNombre: selectedStudent.name,
+        libroTitulo: 'Multa administrativa',
+        monto: monto,
+        motivo: motivo,
+        descripcion: descripcion,
+        fecha: new Date().toLocaleString(),
+        fechaInfraccion: fecha,
+        estado: 'pendiente',
+        tipo: 'manual'
+      };
+      
+      multas.push(nuevaMulta);
+      
+      // Notificación al estudiante
+      notificaciones.push({
+        id: Date.now(),
+        estudianteId: selectedStudent.id,
+        mensaje: `💰 Se te ha asignado una multa de $${monto} por: ${motivo} - ${descripcion}`,
+        tipo: 'multa',
+        fecha: new Date().toLocaleString(),
+        leida: false
+      });
+      
+      localStorage.setItem('multas', JSON.stringify(multas));
+      localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+      
+      alert(`✅ Multa de $${monto} asignada a ${selectedStudent.name}.`);
+      cerrarModalMulta();
+      renderMultas();
+      
+      // Limpiar selección
+      selectedStudent = null;
+      document.getElementById('selectedStudentInfo').style.display = 'none';
+      document.getElementById('searchEstudianteMulta').value = '';
+    }
+    
+    // ⭐ Cerrar modal
+    function cerrarModalMulta() {
+      document.getElementById('multaModal').classList.remove('active');
+      selectedStudent = null;
+    }
+    
+    // ⭐ Mostrar multas
+    function renderMultas() {
+      const container = document.getElementById('multasList');
+      const multas = JSON.parse(localStorage.getItem('multas')) || [];
+      
+      const multasPendientes = multas.filter(m => m.estado === 'pendiente');
+      
+      // Actualizar contador
+      document.getElementById('totalMultas').textContent = multasPendientes.length;
+      
+      if(multasPendientes.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div>💰</div>
+            <h3>No hay multas pendientes</h3>
+            <p>Todas las multas han sido pagadas o no hay multas registradas</p>
+          </div>
+        `;
+        return;
+      }
+      
+      container.innerHTML = multasPendientes.map(m => `
+        <div class="fine-item ${m.diasAtraso ? 'atrasado' : ''}">
+          <div class="fine-content">
+            <h4>${m.libroTitulo}</h4>
+            <p class="fine-details">👤 ${m.estudianteNombre}</p>
+            <p class="fine-details">📅 ${m.fecha}</p>
+            <p class="fine-details"><strong>📝 Motivo:</strong> ${m.motivo}</p>
+            ${m.descripcion ? `<p class="fine-details"><strong>📋 Descripción:</strong> ${m.descripcion}</p>` : ''}
+            ${m.diasAtraso ? `<p class="fine-details">⏰ Atraso: ${m.diasAtraso} días</p>` : ''}
+            ${m.tipo === 'manual' ? `<span class="status-badge" style="background: var(--warning); margin-top: 0.5rem;">MANUAL</span>` : ''}
+          </div>
+          <div style="text-align: right;">
+            <div class="fine-amount">$${m.monto}</div>
+            <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-direction: column;">
+              <button class="btn btn-success" style="padding: 0.5rem 1rem;" onclick="marcarMultaPagada(${m.id})">
+                ✅ Marcar como Pagada
+              </button>
+              <button class="btn btn-danger" style="padding: 0.5rem 1rem;" onclick="eliminarMulta(${m.id})">
+                ❌ Eliminar Multa
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // ⭐ Marcar multa como pagada
+    function marcarMultaPagada(multaId) {
+      if(!confirm('¿Está seguro de marcar esta multa como pagada?')) return;
+      
+      let multas = JSON.parse(localStorage.getItem('multas')) || [];
+      let notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
+      
+      const multaIndex = multas.findIndex(m => m.id === multaId);
+      if(multaIndex === -1) return;
+      
+      const multa = multas[multaIndex];
+      
+      multas[multaIndex].estado = 'pagada';
+      multas[multaIndex].fechaPago = new Date().toLocaleString();
+      
+      // Notificar al estudiante
+      notificaciones.push({
+        id: Date.now(),
+        estudianteId: multa.estudianteId,
+        mensaje: `✅ Multa de $${multa.monto} por "${multa.motivo}" ha sido marcada como PAGADA.`,
+        tipo: 'multa_pagada',
+        fecha: new Date().toLocaleString(),
+        leida: false
+      });
+      
+      localStorage.setItem('multas', JSON.stringify(multas));
+      localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+      
+      alert('✅ Multa marcada como pagada.');
+      renderMultas();
+    }
+    
+    // ⭐ Eliminar multa
+    function eliminarMulta(multaId) {
+      if(!confirm('¿Está seguro de eliminar esta multa? Esta acción no se puede deshacer.')) return;
+      
+      let multas = JSON.parse(localStorage.getItem('multas')) || [];
+      let notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
+      
+      const multaIndex = multas.findIndex(m => m.id === multaId);
+      if(multaIndex === -1) return;
+      
+      const multa = multas[multaIndex];
+      
+      // Notificar al estudiante si la multa estaba pendiente
+      if (multa.estado === 'pendiente') {
+        notificaciones.push({
+          id: Date.now(),
+          estudianteId: multa.estudianteId,
+          mensaje: `❌ Multa de $${multa.monto} por "${multa.motivo}" ha sido ELIMINADA por el bibliotecario.`,
+          tipo: 'multa_eliminada',
+          fecha: new Date().toLocaleString(),
+          leida: false
+        });
+      }
+      
+      multas.splice(multaIndex, 1);
+      
+      localStorage.setItem('multas', JSON.stringify(multas));
+      localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+      
+      alert('✅ Multa eliminada correctamente.');
+      renderMultas();
+    }
+    
+    // ⭐ Actualizar avatar del usuario
+    function updateUserAvatar() {
+      if(currentUser && currentUser.name) {
+        const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('userAvatar').textContent = initials;
+      }
+    }
+    
+    // ⭐ Logout
+    function logout() {
+      if(confirm('¿Está seguro que desea cerrar sesión?')) {
+        localStorage.removeItem('currentUser');
+        window.location.href = 'index.html';
+      }
+    }
+    
+    // ⭐ Inicialización
+    function init() {
+      if(!currentUser || currentUser.role !== 'bibliotecario') {
+        window.location.href = 'index.html';
+        return;
+      }
+      
+      document.getElementById('userName').textContent = currentUser.name;
+      document.getElementById('userRole').textContent = 'Bibliotecario';
+      document.getElementById('lastAccess').textContent = 'Último acceso: ' + (localStorage.getItem('lastAccessTime') || 'Ahora');
+      
+      updateUserAvatar();
+      renderSolicitudes();
+      renderPrestamosActivos();
+      renderDevoluciones();
+      renderInventario();
+      renderMultas();
+      
+      // Actualizar automáticamente cada 10 segundos
+      setInterval(() => {
+        renderSolicitudes();
+        renderPrestamosActivos();
+      }, 10000);
+    }
+    
+    // Cerrar modal al hacer clic fuera
+    document.getElementById('multaModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        cerrarModalMulta();
+      }
+    });
+    
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
 </body>
 </html>

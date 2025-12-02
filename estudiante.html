@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo Estudiante - Biblioteca Digital INACAP</title>
+<style>
+    :root {
+        --primary: #429111;
+        --primary-dark: #36770e;
+        --secondary: #667eea;
+        --secondary-dark: #764ba2;
+        --danger: #f24949;
+        --warning: #ffaa00;
+        --success: #28a745;
+        --info: #1e90ff;
+        --light: #f8fafc;
+        --dark: #1f2937;
+        --gray: #6b7280;
+        --gray-light: #e5e7eb;
+        --white: #ffffff;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+        --radius: 12px;
+        --radius-sm: 8px;
+        --transition: all 0.3s ease;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, #f8fafc 0%, #e5e7eb 100%);
+        min-height: 100vh;
+        color: var(--dark);
+    }
+
+    /* Header */
+    .header {
+        background: linear-gradient(135deg, var(--white) 0%, #f9fafb 100%);
+        padding: 1rem 2rem;
+        box-shadow: var(--shadow);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        border-bottom: 2px solid var(--gray-light);
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .logo {
+        position: relative;
+        width: 70px;
+        height: 70px;
+    }
+
+    .logo img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--primary);
+        box-shadow: 0 4px 12px rgba(145, 17, 17, 0.2);
+        transition: var(--transition);
+    }
+
+    .logo:hover img {
+        transform: rotate(5deg);
+        box-shadow: 0 6px 20px rgba(66, 145, 17, 0.3);
+    }
+
+    .user-info h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 0.25rem;
+    }
+
+    .user-info small {
+        color: var(--gray);
+        font-size: 0.9rem;
+        background: var(--light);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        border: 1px solid var(--gray-light);
+    }
+
+    /* Book Counter */
+    .book-counter {
+        font-size: 0.9rem;
+        color: var(--primary);
+        font-weight: 600;
+        margin-top: 0.25rem;
+        padding: 0.25rem 0.75rem;
+        background: var(--light);
+        border-radius: 20px;
+        border: 1px solid var(--gray-light);
+        display: inline-block;
+        transition: var(--transition);
+    }
+
+    .book-counter.limit-reached {
+        color: var(--danger);
+        background: linear-gradient(135deg, rgba(242, 73, 73, 0.1) 0%, rgba(209, 47, 47, 0.1) 100%);
+        border-color: var(--danger);
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .notification {
+        position: relative;
+        cursor: pointer;
+        padding: 0.75rem;
+        background: var(--white);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--gray-light);
+        transition: var(--transition);
+    }
+
+    .notification:hover {
+        background: var(--light);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    .notification .badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: linear-gradient(135deg, var(--danger) 0%, #d12f2f 100%);
+        color: var(--white);
+        font-size: 0.7rem;
+        font-weight: 700;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        border: 2px solid var(--white);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 1rem;
+        background: var(--white);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--gray-light);
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+    .user-details {
+        text-align: right;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 1.1rem;
+    }
+
+    .user-career {
+        color: var(--primary);
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 0.1rem;
+    }
+
+    .logout-btn {
+        padding: 0.6rem 1.5rem;
+        background: linear-gradient(135deg, var(--danger) 0%, #d12f2f 100%);
+        color: var(--white);
+        border: none;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-weight: 600;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(242, 73, 73, 0.2);
+    }
+
+    .logout-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(242, 73, 73, 0.3);
+    }
+
+    .logout-btn:active {
+        transform: translateY(0);
+    }
+
+    /* Main Container */
+    .main-container {
+        display: flex;
+        min-height: calc(100vh - 80px);
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 280px;
+        background: linear-gradient(135deg, var(--white) 0%, #f9fafb 100%);
+        padding: 2rem 0;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.08);
+        border-right: 1px solid var(--gray-light);
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .nav-item {
+        padding: 1rem 2rem;
+        margin: 0 1rem;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-weight: 500;
+        color: var(--gray);
+        border: 1px solid transparent;
+    }
+
+    .nav-item:hover {
+        background: var(--light);
+        color: var(--primary);
+        transform: translateX(5px);
+        border-color: var(--gray-light);
+    }
+
+    .nav-item.active {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: var(--white);
+        box-shadow: 0 4px 12px rgba(66, 145, 17, 0.3);
+        border-color: var(--primary);
+    }
+
+    .nav-item.active:hover {
+        transform: translateX(5px);
+        background: linear-gradient(135deg, var(--primary-dark) 0%, #2d690c 100%);
+    }
+
+    .nav-icon {
+        font-size: 1.2rem;
+    }
+
+    /* Content */
+    .content {
+        flex: 1;
+        padding: 2rem;
+        overflow-y: auto;
+    }
+
+    .content-section {
+        display: none;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .content-section.active {
+        display: block;
+    }
+
+    .section-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--gray-light);
+    }
+
+    .section-header h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-header h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        border-radius: 2px;
+    }
+
+    .section-header p {
+        color: var(--gray);
+        font-size: 1rem;
+    }
+
+    /* Search Container */
+    .search-container {
+        margin-bottom: 2rem;
+    }
+
+    .search-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .search-input-container {
+        position: relative;
+        flex: 1;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 1rem 1.5rem 1rem 3.5rem;
+        border: 2px solid var(--gray-light);
+        border-radius: var(--radius);
+        font-size: 1rem;
+        background: var(--white);
+        transition: var(--transition);
+        box-shadow: var(--shadow);
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(66, 145, 17, 0.1);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray);
+        font-size: 1.2rem;
+    }
+
+    /* Career Filter */
+    .career-filter-container {
+        position: relative;
+        width: 300px;
+    }
+
+    .career-filter {
+        width: 100%;
+        padding: 1rem 1.5rem 1rem 3.5rem;
+        border: 2px solid var(--gray-light);
+        border-radius: var(--radius);
+        font-size: 1rem;
+        background: var(--white);
+        transition: var(--transition);
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+
+    .career-filter:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(66, 145, 17, 0.1);
+    }
+
+    .career-filter-icon {
+        position: absolute;
+        left: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray);
+        font-size: 1.2rem;
+        pointer-events: none;
+    }
+
+    .career-arrow {
+        position: absolute;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray);
+        pointer-events: none;
+    }
+
+    /* Filter Controls */
+    .filter-controls {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        padding: 0.75rem 1.5rem;
+        background: var(--white);
+        border: 2px solid var(--gray-light);
+        border-radius: var(--radius);
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--gray);
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .filter-btn:hover {
+        background: var(--light);
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .filter-btn.active {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: var(--white);
+        border-color: var(--primary);
+        box-shadow: 0 4px 12px rgba(66, 145, 17, 0.2);
+    }
+
+    .clear-filters-btn {
+        padding: 0.75rem 1.5rem;
+        background: var(--white);
+        border: 2px solid var(--gray-light);
+        border-radius: var(--radius);
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--gray);
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .clear-filters-btn:hover {
+        background: var(--light);
+        border-color: var(--danger);
+        color: var(--danger);
+    }
+
+    /* Book Grid */
+    .book-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .book-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        border: 1px solid var(--gray-light);
+        position: relative;
+    }
+
+    .book-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary);
+    }
+
+    .book-image {
+        position: relative;
+        height: 300px;
+        overflow: hidden;
+    }
+
+    .book-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: var(--transition);
+    }
+
+    .book-card:hover .book-image img {
+        transform: scale(1.05);
+    }
+
+    .book-status {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .status-disponible {
+        background: linear-gradient(135deg, var(--success) 0%, #218838 100%);
+        color: var(--white);
+    }
+
+    .status-prestado {
+        background: linear-gradient(135deg, var(--info) 0%, #0069d9 100%);
+        color: var(--white);
+    }
+
+    .status-solicitado {
+        background: linear-gradient(135deg, var(--warning) 0%, #e6a100 100%);
+        color: var(--white);
+    }
+
+    .status-no-disponible {
+        background: linear-gradient(135deg, var(--danger) 0%, #d12f2f 100%);
+        color: var(--white);
+    }
+
+    .book-info {
+        padding: 1.5rem;
+    }
+
+    .book-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+    }
+
+    .book-author {
+        color: var(--gray);
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .book-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: var(--gray);
+    }
+
+    .book-career {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.25rem 0.75rem;
+        background: linear-gradient(135deg, rgba(66, 145, 17, 0.1) 0%, rgba(102, 126, 234, 0.1) 100%);
+        border-radius: 20px;
+        width: fit-content;
+        font-weight: 500;
+        color: var(--primary-dark);
+    }
+
+    .book-year, .book-category {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 0.8rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: var(--white);
+        border: none;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(66, 145, 17, 0.2);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(66, 145, 17, 0.3);
+    }
+
+    .btn-primary:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+        background: var(--gray-light);
+        color: var(--gray);
+        cursor: not-allowed;
+        opacity: 0.7;
+        box-shadow: none;
+    }
+
+    /* Request Items */
+    .requests-list, .loans-list, .notifications-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .request-item, .loan-item, .notification-item {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--gray-light);
+        transition: var(--transition);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .request-item:hover, .loan-item:hover, .notification-item:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--gray);
+    }
+
+    .item-content {
+        flex: 1;
+    }
+
+    .item-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .item-details {
+        color: var(--gray);
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .item-meta {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.9rem;
+        color: var(--gray);
+    }
+
+    .item-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-end;
+    }
+
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .badge-pendiente {
+        background: linear-gradient(135deg, var(--warning) 0%, #e6a100 100%);
+        color: var(--white);
+    }
+
+    .badge-aprobado {
+        background: linear-gradient(135deg, var(--info) 0%, #0069d9 100%);
+        color: var(--white);
+    }
+
+    .badge-activo {
+        background: linear-gradient(135deg, var(--success) 0%, #218838 100%);
+        color: var(--white);
+    }
+
+    .badge-atrasado {
+        background: linear-gradient(135deg, var(--danger) 0%, #d12f2f 100%);
+        color: var(--white);
+    }
+
+    .btn-small {
+        padding: 0.4rem 1rem;
+        border-radius: var(--radius-sm);
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        border: 1px solid transparent;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, var(--danger) 0%, #d12f2f 100%);
+        color: var(--white);
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(242, 73, 73, 0.2);
+    }
+
+    /* Notification Styles */
+    .notification-item.unread {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e1f5fe 100%);
+        border-left: 4px solid var(--info);
+    }
+
+    .notification-item.read {
+        opacity: 0.8;
+    }
+
+    .notification-icon {
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
+
+    .notification-content {
+        flex: 1;
+    }
+
+    .notification-time {
+        font-size: 0.85rem;
+        color: var(--gray);
+        margin-top: 0.25rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: var(--white);
+        border-radius: var(--radius);
+        border: 2px dashed var(--gray-light);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: var(--gray-light);
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+        color: var(--gray);
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        color: var(--gray);
+    }
+
+    /* Loading */
+    .loading {
+        text-align: center;
+        padding: 2rem;
+        color: var(--gray);
+    }
+
+    .loading-spinner {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--gray-light);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .book-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+    }
+
+    @media (max-width: 768px) {
+        .main-container {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+            padding: 1rem;
+            flex-direction: row;
+            overflow-x: auto;
+            border-right: none;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .nav-item {
+            flex-shrink: 0;
+            margin: 0;
+            padding: 0.75rem 1rem;
+        }
+
+        .content {
+            padding: 1.5rem;
+        }
+
+        .header {
+            padding: 1rem;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .header-right {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .logo-container {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .search-row {
+            flex-direction: column;
+        }
+
+        .career-filter-container {
+            width: 100%;
+        }
+
+        .filter-controls {
+            flex-direction: column;
+        }
+
+        .filter-btn, .clear-filters-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .request-item, .loan-item, .notification-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .item-actions {
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .btn-small {
+            width: 100%;
+        }
+        
+        .book-counter {
+            margin-top: 0.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .book-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .book-card {
+            margin-bottom: 1rem;
+        }
+
+        .nav-item {
+            font-size: 0.9rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+</head>
+
+<body>
+<header class="header">
+    <div class="logo-container">
+        <div class="logo">
+            <img src="img/inacap-logo.png" alt="Logo INACAP">
+        </div>
+        <div class="user-info">
+            <h3>Biblioteca Digital</h3>
+            <small>Módulo Estudiante</small>
+            <div id="bookCounter" class="book-counter">📚 Libros: 0/2</div>
+        </div>
+    </div>
+
+    <div class="header-right">
+        <div class="notification" onclick="showSection('notificaciones')">
+            🔔
+            <span id="notifBadge" class="badge" style="display:none;">0</span>
+        </div>
+        
+        <div class="user-profile">
+            <div class="user-avatar" id="userAvatar">U</div>
+            <div class="user-details">
+                <div class="user-name" id="userName">Usuario</div>
+                <div class="user-career" id="userCareer">Carrera no asignada</div>
+            </div>
+        </div>
+        
+        <button class="logout-btn" onclick="logout()">
+            <span>🚪</span> Cerrar Sesión
+        </button>
+    </div>
+</header>
+
+<div class="main-container">
+    <nav class="sidebar">
+        <div class="nav-item active" onclick="showSection('catalogo', this)">
+            <span class="nav-icon">📚</span>
+            <span>Catálogo de Libros</span>
+        </div>
+        <div class="nav-item" onclick="showSection('solicitudes', this)">
+            <span class="nav-icon">📖</span>
+            <span>Mis Solicitudes</span>
+        </div>
+        <div class="nav-item" onclick="showSection('prestamos', this)">
+            <span class="nav-icon">📋</span>
+            <span>Mis Préstamos</span>
+        </div>
+        <div class="nav-item" onclick="showSection('notificaciones', this)">
+            <span class="nav-icon">🔔</span>
+            <span>Notificaciones</span>
+        </div>
+    </nav>
+
+    <main class="content">
+        <!-- 📚 CATÁLOGO -->
+        <section id="catalogo" class="content-section active">
+            <div class="section-header">
+                <h2>Catálogo de Libros</h2>
+                <p id="catalogDescription">Explora nuestra colección de libros disponibles</p>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-row">
+                    <div class="search-input-container">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="bookSearch" class="search-input" 
+                               placeholder="Buscar por título, autor, categoría..." 
+                               onkeyup="renderCatalogo()">
+                    </div>
+                    <div class="career-filter-container">
+                        <span class="career-filter-icon">🎓</span>
+                        <select id="careerFilter" class="career-filter" onchange="renderCatalogo()">
+                            <option value="">Todas las carreras</option>
+                            <!-- Las opciones se cargarán dinámicamente -->
+                        </select>
+                        <span class="career-arrow">▼</span>
+                    </div>
+                </div>
+                
+                <div class="filter-controls">
+                    <button class="filter-btn active" onclick="filterByAvailability('all')">
+                        <span>📚</span> Todos los libros
+                    </button>
+                    <button class="filter-btn" onclick="filterByAvailability('available')">
+                        <span>✅</span> Disponibles
+                    </button>
+                    <button class="filter-btn" onclick="filterByCareer('userCareer')">
+                        <span>🎓</span> Mi carrera
+                    </button>
+                    <button class="filter-btn" onclick="filterByAvailability('recommended')">
+                        <span>⭐</span> Recomendados
+                    </button>
+                    <button class="clear-filters-btn" onclick="clearFilters()">
+                        <span>🗑️</span> Limpiar filtros
+                    </button>
+                </div>
+            </div>
+            
+            <div id="bookGrid" class="book-grid"></div>
+        </section>
+
+        <!-- 📖 MIS SOLICITUDES -->
+        <section id="solicitudes" class="content-section">
+            <div class="section-header">
+                <h2>Mis Solicitudes</h2>
+                <p>Historial y estado de tus solicitudes de préstamo</p>
+            </div>
+            <div id="solicitudesList" class="requests-list"></div>
+        </section>
+
+        <!-- 📚 MIS PRÉSTAMOS -->
+        <section id="prestamos" class="content-section">
+            <div class="section-header">
+                <h2>Mis Préstamos Activos</h2>
+                <p>Libros que tienes actualmente en préstamo</p>
+            </div>
+            <div id="prestamosList" class="loans-list"></div>
+        </section>
+
+        <!-- 🔔 NOTIFICACIONES -->
+        <section id="notificaciones" class="content-section">
+            <div class="section-header">
+                <h2>Notificaciones</h2>
+                <p>Mantente informado sobre tus actividades</p>
+            </div>
+            <div id="notificacionesList" class="notifications-list"></div>
+        </section>
+    </main>
+</div>
+
+<script>
+// Datos del usuario actual
+let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+// Variables globales para filtros
+let currentFilter = 'all';
+let availableCarreras = [];
+
+// 📌 Funciones principales
+function showSection(id, element){
+    // Remover active de todas las secciones
+    document.querySelectorAll(".content-section").forEach(s => s.classList.remove("active"));
+    document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
+    
+    // Agregar active a la sección seleccionada
+    document.getElementById(id).classList.add("active");
+    if (element) element.classList.add("active");
+    
+    // Actualizar la sección mostrada
+    if(id === 'catalogo') {
+        loadCareerFilter();
+        renderCatalogo();
+    }
+    else if(id === 'solicitudes') renderSolicitudes();
+    else if(id === 'prestamos') renderPrestamos();
+    else if(id === 'notificaciones') renderNotificaciones();
+}
+
+// ⭐ Cargar filtro de carreras
+function loadCareerFilter() {
+    const books = JSON.parse(localStorage.getItem('books')) || [];
+    const carrerasSet = new Set();
+    
+    books.forEach(book => {
+        if (book.carrera) {
+            carrerasSet.add(book.carrera);
+        }
+    });
+    
+    availableCarreras = Array.from(carrerasSet).sort();
+    const careerFilter = document.getElementById('careerFilter');
+    
+    // Limpiar opciones excepto la primera
+    while (careerFilter.options.length > 1) {
+        careerFilter.remove(1);
+    }
+    
+    // Agregar carreras disponibles
+    availableCarreras.forEach(carrera => {
+        const option = document.createElement('option');
+        option.value = carrera;
+        option.textContent = carrera;
+        careerFilter.appendChild(option);
+    });
+    
+    // Si el usuario tiene carrera, mostrar en el perfil y en el filtro
+    if (currentUser && currentUser.career) {
+        document.getElementById('userCareer').textContent = currentUser.career;
+        document.getElementById('userCareer').style.color = 'var(--primary)';
+        
+        // Actualizar descripción del catálogo
+        const desc = document.getElementById('catalogDescription');
+        desc.textContent = `Explora nuestra colección de libros disponibles para ${currentUser.career}`;
+        
+        // Si no hay filtro activo, mostrar automáticamente libros de la carrera del usuario
+        if (currentFilter === 'all' && document.getElementById('careerFilter').value === '') {
+            document.getElementById('careerFilter').value = currentUser.career;
+            currentFilter = 'userCareer';
+            updateFilterButtons();
+        }
+    }
+}
+
+// ⭐ Actualizar contador de libros
+function updateBookCounter() {
+    const prestamos = JSON.parse(localStorage.getItem('prestamos')) || [];
+    const solicitudes = JSON.parse(localStorage.getItem('solicitudes')) || [];
+    
+    const prestamosActivos = prestamos.filter(p => 
+        p.estudianteId === currentUser.id && 
+        p.estado === 'activo'
+    ).length;
+    
+    const solicitudesPendientes = solicitudes.filter(s => 
+        s.estudianteId === currentUser.id && 
+        s.estado === 'pendiente'
+    ).length;
+    
+    const total = prestamosActivos + solicitudesPendientes;
+    const limite = 2;
+    
+    const counterElement = document.getElementById('bookCounter');
+    if (counterElement) {
+        counterElement.textContent = `📚 Libros: ${total}/${limite}`;
+        if (total >= limite) {
+            counterElement.classList.add('limit-reached');
+        } else {
+            counterElement.classList.remove('limit-reached');
+        }
+    }
+    
+    return { prestamosActivos, solicitudesPendientes, total };
+}
+
+// ⭐ Render Catálogo
+function renderCatalogo(){
+    const search = document.getElementById("bookSearch").value.toLowerCase();
+    const carrera = document.getElementById("careerFilter").value;
+    const grid = document.getElementById("bookGrid");
+    
+    // Actualizar botones de filtro
+    updateFilterButtons();
+    
+    // Actualizar contador
+    const counter = updateBookCounter();
+    const puedeSolicitarMas = counter.total < 2;
+    
+    // Mostrar loading
+    grid.innerHTML = `
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Buscando libros...</p>
+        </div>
+    `;
+    
+    setTimeout(() => {
+        // Obtener libros del sistema
+        const books = JSON.parse(localStorage.getItem('books')) || [];
+        const prestamos = JSON.parse(localStorage.getItem('prestamos')) || [];
+        const solicitudes = JSON.parse(localStorage.getItem('solicitudes')) || [];
+        
+        // Filtrar libros según búsqueda y filtros
+        let filtered = books.filter(b => {
+            // Filtro de búsqueda
+            const matchSearch = b.title.toLowerCase().includes(search) ||
+                              b.author.toLowerCase().includes(search) ||
+                              (b.category && b.category.toLowerCase().includes(search)) ||
+                              (b.carrera && b.carrera.toLowerCase().includes(search));
+            
+            // Filtro por carrera
+            const matchCarrera = !carrera || b.carrera === carrera;
+            
+            return matchSearch && matchCarrera;
+        });
+        
+        // Aplicar filtro de disponibilidad
+        if (currentFilter === 'available') {
+            filtered = filtered.filter(libro => {
+                // Verificar si hay préstamo activo
+                const prestadoGeneral = prestamos.some(p => 
+                    p.libroId === libro.id && 
+                    (p.estado === 'activo' || p.estado === 'atrasado')
+                );
+                
+                return libro.available && !prestadoGeneral;
+            });
+        } else if (currentFilter === 'userCareer') {
+            // Filtrar por carrera del usuario
+            if (currentUser && currentUser.career) {
+                filtered = filtered.filter(libro => libro.carrera === currentUser.career);
+            }
+        } else if (currentFilter === 'recommended') {
+            // Filtrar libros recomendados (de la carrera del usuario + generales)
+            if (currentUser && currentUser.career) {
+                filtered = filtered.filter(libro => 
+                    libro.carrera === currentUser.career || 
+                    libro.carrera === 'General' || 
+                    !libro.carrera
+                );
+            }
+        }
+        
+        if(filtered.length === 0) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <div>📚</div>
+                    <h3>No se encontraron libros</h3>
+                    <p>Intenta con otros términos de búsqueda o cambia los filtros</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Ordenar libros: primero los de la carrera del usuario, luego generales
+        if (currentUser && currentUser.career) {
+            filtered.sort((a, b) => {
+                if (a.carrera === currentUser.career && b.carrera !== currentUser.career) return -1;
+                if (a.carrera !== currentUser.career && b.carrera === currentUser.career) return 1;
+                return 0;
+            });
+        }
+        
+        // Para cada libro, verificar su disponibilidad
+        const librosConEstado = filtered.map(libro => {
+            // Buscar si hay préstamo activo del usuario actual
+            const prestamoActivo = prestamos.find(p => 
+                p.libroId === libro.id && 
+                p.estado === 'activo' && 
+                p.estudianteId === currentUser.id
+            );
+            
+            // Buscar si hay solicitud pendiente del usuario actual
+            const solicitudPendiente = solicitudes.find(s => 
+                s.libroId === libro.id && 
+                s.estudianteId === currentUser.id && 
+                s.estado === 'pendiente'
+            );
+            
+            // Verificar disponibilidad general
+            const prestadoGeneral = prestamos.some(p => 
+                p.libroId === libro.id && 
+                (p.estado === 'activo' || p.estado === 'atrasado')
+            );
+            
+            let estado = 'disponible';
+            let disponible = true;
+            
+            if(prestamoActivo) {
+                estado = 'prestado';
+                disponible = false;
+            } else if(solicitudPendiente) {
+                estado = 'solicitado';
+                disponible = false;
+            } else if(prestadoGeneral) {
+                estado = 'no-disponible';
+                disponible = false;
+            } else if(!libro.available) {
+                estado = 'no-disponible';
+                disponible = false;
+            }
+            
+            // Verificar si es de la carrera del usuario
+            const esMiCarrera = currentUser && currentUser.career && libro.carrera === currentUser.career;
+            const esGeneral = !libro.carrera || libro.carrera === 'General';
+            
+            // Verificar si el estudiante puede solicitar más libros
+            const puedeSolicitar = disponible && puedeSolicitarMas;
+            
+            return {
+                ...libro,
+                disponible,
+                puedeSolicitar,
+                estado,
+                esMiCarrera,
+                esGeneral
+            };
+        });
+        
+        grid.innerHTML = librosConEstado.map(libro => `
+            <div class="book-card">
+                <div class="book-image">
+                    <img src="${libro.img || 'img/book-placeholder.png'}" alt="${libro.title}">
+                    <span class="book-status status-${libro.estado}">
+                        ${libro.estado === 'disponible' ? 'Disponible' : 
+                         libro.estado === 'prestado' ? 'En préstamo' :
+                         libro.estado === 'solicitado' ? 'Solicitado' : 'No disponible'}
+                    </span>
+                </div>
+                <div class="book-info">
+                    <h3 class="book-title">${libro.title}</h3>
+                    <p class="book-author">✍️ ${libro.author}</p>
+                    <div class="book-meta">
+                        ${libro.carrera ? `
+                            <span class="book-career" style="${libro.esMiCarrera ? 'background: linear-gradient(135deg, rgba(66, 145, 17, 0.2) 0%, rgba(66, 145, 17, 0.4) 100%); color: var(--primary-dark); font-weight: 600;' : ''}">
+                                🎓 ${libro.carrera} ${libro.esMiCarrera ? '⭐' : ''}
+                            </span>
+                        ` : ''}
+                        <span class="book-year">📅 ${libro.year}</span>
+                        <span class="book-category">🏷️ ${libro.category || 'General'}</span>
+                    </div>
+                    <button class="btn-primary" 
+                            onclick="solicitar(${libro.id})" 
+                            ${!libro.puedeSolicitar ? 'disabled' : ''}>
+                        ${libro.disponible ? 
+                            (libro.puedeSolicitar ? '📖 Solicitar préstamo' : '❌ Límite alcanzado') : 
+                            '⛔ No disponible'}
+                    </button>
+                </div>
+            </div>
+        `).join("");
+    }, 500); // Simular tiempo de carga
+}
+
+// ⭐ Filtrar por disponibilidad
+function filterByAvailability(filter) {
+    currentFilter = filter;
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    // Activar el botón correspondiente
+    if (filter === 'all') {
+        document.querySelector('.filter-btn:nth-child(1)').classList.add('active');
+        document.getElementById('careerFilter').value = '';
+    } else if (filter === 'available') {
+        document.querySelector('.filter-btn:nth-child(2)').classList.add('active');
+    } else if (filter === 'userCareer') {
+        document.querySelector('.filter-btn:nth-child(3)').classList.add('active');
+        if (currentUser && currentUser.career) {
+            document.getElementById('careerFilter').value = currentUser.career;
+        }
+    } else if (filter === 'recommended') {
+        document.querySelector('.filter-btn:nth-child(4)').classList.add('active');
+        document.getElementById('careerFilter').value = '';
+    }
+    
+    renderCatalogo();
+}
+
+// ⭐ Filtrar por carrera del usuario
+function filterByCareer(type) {
+    if (type === 'userCareer') {
+        if (!currentUser || !currentUser.career) {
+            alert('No tienes una carrera asignada en tu perfil. Contacta al administrador.');
+            return;
+        }
+        document.getElementById('careerFilter').value = currentUser.career;
+        currentFilter = 'userCareer';
+        filterByAvailability('userCareer');
+    }
+}
+
+// ⭐ Limpiar filtros
+function clearFilters() {
+    document.getElementById('bookSearch').value = '';
+    document.getElementById('careerFilter').value = '';
+    currentFilter = 'all';
+    
+    // Actualizar botones de filtro
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    document.querySelector('.filter-btn:nth-child(1)').classList.add('active');
+    
+    renderCatalogo();
+}
+
+// ⭐ Actualizar botones de filtro
+function updateFilterButtons() {
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    if (currentFilter === 'all') {
+        document.querySelector('.filter-btn:nth-child(1)').classList.add('active');
+    } else if (currentFilter === 'available') {
+        document.querySelector('.filter-btn:nth-child(2)').classList.add('active');
+    } else if (currentFilter === 'userCareer') {
+        document.querySelector('.filter-btn:nth-child(3)').classList.add('active');
+    } else if (currentFilter === 'recommended') {
+        document.querySelector('.filter-btn:nth-child(4)').classList.add('active');
+    }
+}
+
+// ⭐ Solicitar libro
+function solicitar(id){
+    const books = JSON.parse(localStorage.getItem('books')) || [];
+    const libro = books.find(b => b.id === id);
+    
+    if(!libro || !libro.available) {
+        alert("❌ Este libro no está disponible para préstamo.");
+        return;
+    }
+    
+    // Verificar límite de 2 libros por estudiante
+    const prestamos = JSON.parse(localStorage.getItem('prestamos')) || [];
+    const solicitudes = JSON.parse(localStorage.getItem('solicitudes')) || [];
+    
+    // Contar libros activos del estudiante
+    const prestamosActivos = prestamos.filter(p => 
+        p.estudianteId === currentUser.id && 
+        p.estado === 'activo'
+    ).length;
+    
+    // Contar solicitudes pendientes del estudiante
+    const solicitudesPendientes = solicitudes.filter(s => 
+        s.estudianteId === currentUser.id && 
+        s.estado === 'pendiente'
+    ).length;
+    
+    const totalLibrosEnProceso = prestamosActivos + solicitudesPendientes;
+    
+    if (totalLibrosEnProceso >= 2) {
+        alert(`❌ Has alcanzado el límite de 2 libros. 
+               Tienes ${prestamosActivos} libro(s) en préstamo y 
+               ${solicitudesPendientes} solicitud(es) pendiente(s). 
+               Devuelve o cancela para solicitar más.`);
+        return;
+    }
+    
+    // Verificar si ya tiene una solicitud pendiente para este libro
+    const existeSolicitud = solicitudes.find(s => 
+        s.libroId === id && 
+        s.estudianteId === currentUser.id && 
+        s.estado === 'pendiente'
+    );
+    
+    if(existeSolicitud) {
+        alert("⚠️ Ya tienes una solicitud pendiente para este libro.");
+        return;
+    }
+    
+    // Verificar si ya tiene el libro prestado
+    const tienePrestamo = prestamos.find(p => 
+        p.libroId === id && 
+        p.estudianteId === currentUser.id && 
+        p.estado === 'activo'
+    );
+    
+    if(tienePrestamo) {
+        alert("📚 Ya tienes este libro en préstamo.");
+        return;
+    }
+    
+    // Crear nueva solicitud
+    const nuevaSolicitud = {
+        id: Date.now(),
+        libroId: id,
+        libroTitulo: libro.title,
+        libroAutor: libro.author,
+        libroCarrera: libro.carrera || 'General',
+        estudianteId: currentUser.id,
+        estudianteNombre: currentUser.name,
+        estudianteCarrera: currentUser.career,
+        fecha: new Date().toLocaleString(),
+        estado: 'pendiente'
+    };
+    
+    solicitudes.push(nuevaSolicitud);
+    localStorage.setItem('solicitudes', JSON.stringify(solicitudes));
+    
+    // Agregar notificación
+    const notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
+    notificaciones.push({
+        id: Date.now(),
+        estudianteId: currentUser.id,
+        mensaje: `📖 Solicitud de préstamo enviada para "${libro.title}"`,
+        tipo: 'solicitud',
+        fecha: new Date().toLocaleString(),
+        leida: false
+    });
+    localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+    
+    alert("✅ Solicitud de préstamo enviada. Espera la aprobación del bibliotecario.");
+    updateBookCounter();
+    renderCatalogo();
+    renderSolicitudes();
+    renderNotificaciones();
+}
+
+// ⭐ Mostrar solicitudes del estudiante
+function renderSolicitudes(){
+    const cont = document.getElementById("solicitudesList");
+    const solicitudes = JSON.parse(localStorage.getItem('solicitudes')) || [];
+    
+    const misSolicitudes = solicitudes.filter(s => s.estudianteId === currentUser.id);
+    
+    if(misSolicitudes.length === 0){
+        cont.innerHTML = `
+            <div class="empty-state">
+                <div>📭</div>
+                <h3>No tienes solicitudes</h3>
+                <p>Dirígete al catálogo para solicitar un libro</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Ordenar por fecha (más recientes primero)
+    misSolicitudes.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    
+    cont.innerHTML = misSolicitudes.map(s => `
+        <div class="request-item">
+            <div class="item-content">
+                <h4 class="item-title">${s.libroTitulo}</h4>
+                <p class="item-details">Autor: ${s.libroAutor}</p>
+                ${s.libroCarrera ? `<p class="item-details">🎓 Carrera: ${s.libroCarrera}</p>` : ''}
+                <div class="item-meta">
+                    <span>📅 ${s.fecha}</span>
+                    <span>👤 ${s.estudianteNombre}</span>
+                </div>
+            </div>
+            <div class="item-actions">
+                <span class="status-badge ${s.estado === 'pendiente' ? 'badge-pendiente' : 
+                                         s.estado === 'aprobado' ? 'badge-aprobado' : 
+                                         'badge-atrasado'}">
+                    ${s.estado === 'pendiente' ? 'PENDIENTE' : 
+                     s.estado === 'aprobado' ? 'APROBADO' : 
+                     'RECHAZADO'}
+                </span>
+                ${s.estado === 'pendiente' ? 
+                    `<button class="btn-small btn-danger" onclick="cancelarSolicitud(${s.id})">
+                        ❌ Cancelar
+                    </button>` : ''}
+            </div>
+        </div>
+    `).join("");
+    
+    updateBookCounter();
+}
+
+// ⭐ Cancelar solicitud
+function cancelarSolicitud(id){
+    if(!confirm("¿Estás seguro de cancelar esta solicitud?")) return;
+    
+    let solicitudes = JSON.parse(localStorage.getItem('solicitudes')) || [];
+    const solicitudIndex = solicitudes.findIndex(s => s.id === id);
+    
+    if(solicitudIndex === -1) return;
+    
+    const solicitud = solicitudes[solicitudIndex];
+    
+    // Agregar notificación de cancelación
+    const notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
+    notificaciones.push({
+        id: Date.now(),
+        estudianteId: currentUser.id,
+        mensaje: `❌ Solicitud cancelada para "${solicitud.libroTitulo}"`,
+        tipo: 'cancelacion',
+        fecha: new Date().toLocaleString(),
+        leida: false
+    });
+    
+    solicitudes.splice(solicitudIndex, 1);
+    localStorage.setItem('solicitudes', JSON.stringify(solicitudes));
+    localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+    
+    // Registrar auditoría si existe el módulo
+    if (localStorage.getItem('auditorias')) {
+        const auditorias = JSON.parse(localStorage.getItem('auditorias')) || [];
+        auditorias.push({
+            usuario: currentUser.name,
+            fecha: new Date().toLocaleDateString('es-CL'),
+            hora: new Date().toLocaleTimeString('es-CL'),
+            ip: 'Estudiante',
+            accion: `Cancelación de solicitud: ${solicitud.libroTitulo}`,
+            tipo: 'cancelacion'
+        });
+        localStorage.setItem('auditorias', JSON.stringify(auditorias));
+    }
+    
+    alert("✅ Solicitud cancelada exitosamente.");
+    updateBookCounter();
+    renderSolicitudes();
+    renderCatalogo();
+    renderNotificaciones();
+}
+
+// ⭐ Mostrar préstamos activos del estudiante
+function renderPrestamos(){
+    const cont = document.getElementById("prestamosList");
+    const prestamos = JSON.parse(localStorage.getItem('prestamos')) || [];
+    const books = JSON.parse(localStorage.getItem('books')) || [];
+    
+    const misPrestamos = prestamos.filter(p => 
+        p.estudianteId === currentUser.id && 
+        (p.estado === 'activo' || p.estado === 'atrasado')
+    );
+    
+    if(misPrestamos.length === 0){
+        cont.innerHTML = `
+            <div class="empty-state">
+                <div>📚</div>
+                <h3>No tienes préstamos activos</h3>
+                <p>Dirígete al catálogo para solicitar un libro</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Ordenar por fecha de préstamo (más recientes primero)
+    misPrestamos.sort((a, b) => new Date(b.fechaPrestamo) - new Date(a.fechaPrestamo));
+    
+    cont.innerHTML = misPrestamos.map(p => {
+        const libro = books.find(b => b.id === p.libroId);
+        const fechaPrestamo = new Date(p.fechaPrestamo);
+        const fechaDevolucion = new Date(fechaPrestamo);
+        fechaDevolucion.setDate(fechaDevolucion.getDate() + 7);
+        const hoy = new Date();
+        const atrasado = hoy > fechaDevolucion;
+        const diasAtraso = atrasado ? Math.floor((hoy - fechaDevolucion) / (1000 * 60 * 60 * 24)) : 0;
+        
+        return `
+            <div class="loan-item ${atrasado ? 'atrasado' : ''}">
+                <div class="item-content">
+                    <h4 class="item-title">${libro ? libro.title : 'Libro no encontrado'}</h4>
+                    <p class="item-details">Autor: ${libro ? libro.author : 'N/A'}</p>
+                    ${libro && libro.carrera ? `<p class="item-details">🎓 Carrera: ${libro.carrera}</p>` : ''}
+                    <div class="item-meta">
+                        <span>📅 Préstamo: ${p.fechaPrestamo}</span>
+                        <span>⏰ Límite: ${fechaDevolucion.toLocaleDateString()}</span>
+                        ${atrasado ? `<span style="color:var(--danger); font-weight:600;">⚠️ ${diasAtraso} días de atraso</span>` : ''}
+                    </div>
+                </div>
+                <div class="item-actions">
+                    <span class="status-badge ${atrasado ? 'badge-atrasado' : 'badge-activo'}">
+                        ${atrasado ? 'ATRASADO' : 'ACTIVO'}
+                    </span>
+                </div>
+            </div>
+        `;
+    }).join("");
+    
+    updateBookCounter();
+}
+
+// ⭐ Notificaciones
+function renderNotificaciones(){
+    const cont = document.getElementById("notificacionesList");
+    const badge = document.getElementById("notifBadge");
+    
+    const notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
+    const misNotificaciones = notificaciones.filter(n => n.estudianteId === currentUser.id);
+    
+    const noLeidas = misNotificaciones.filter(n => !n.leida).length;
+    badge.textContent = noLeidas;
+    badge.style.display = noLeidas > 0 ? "flex" : "none";
+    
+    if(misNotificaciones.length === 0){
+        cont.innerHTML = `
+            <div class="empty-state">
+                <div>🔔</div>
+                <h3>No tienes notificaciones</h3>
+                <p>Todas tus notificaciones aparecerán aquí</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Ordenar por fecha (más recientes primero)
+    misNotificaciones.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
+    
+    cont.innerHTML = misNotificaciones.map(n => `
+        <div class="notification-item ${n.leida ? 'read' : 'unread'}" onclick="marcarComoLeida(${n.id})">
+            <div class="notification-icon">
+                ${n.tipo === 'solicitud' ? '📖' : 
+                  n.tipo === 'aprobacion' ? '✅' : 
+                  n.tipo === 'cancelacion' ? '❌' : 
+                  n.tipo === 'multa' ? '💰' : '🔔'}
+            </div>
+            <div class="notification-content">
+                <h4>${n.mensaje}</h4>
+                <p class="notification-time">📅 ${n.fecha}</p>
+            </div>
+        </div>
+    `).join("");
+    
+    // Marcar como leídas
+    notificaciones.forEach(n => {
+        if(n.estudianteId === currentUser.id) n.leida = true;
+    });
+    localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+}
+
+// ⭐ Marcar notificación como leída
+function marcarComoLeida(id) {
+    const notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [];
+    const notificacion = notificaciones.find(n => n.id === id);
+    
+    if (notificacion) {
+        notificacion.leida = true;
+        localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+        renderNotificaciones();
+    }
+}
+
+// ⭐ Actualizar avatar del usuario
+function updateUserAvatar() {
+    if(currentUser && currentUser.name) {
+        const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('userAvatar').textContent = initials;
+    }
+}
+
+// ⭐ Sesión
+function logout(){
+    if(confirm("¿Estás seguro de cerrar sesión?")) {
+        localStorage.removeItem('currentUser');
+        window.location.href = 'index.html';
+    }
+}
+
+// ⭐ Inicializar datos de ejemplo (solo si no existen)
+function initializeSampleData() {
+    // Verificar si ya existen libros
+    let books = JSON.parse(localStorage.getItem('books'));
+    if (!books || books.length === 0) {
+        books = [
+            {
+                id: 1,
+                title: "Ingeniería de Software Moderna",
+                author: "Ian Sommerville",
+                year: 2021,
+                category: "Ingeniería",
+                carrera: "Ingeniería en Informática",
+                img: "img/software-engineering.jpg",
+                available: true
+            },
+            {
+                id: 2,
+                title: "Anatomía Humana",
+                author: "Henry Gray",
+                year: 2020,
+                category: "Medicina",
+                carrera: "Técnico en Enfermería",
+                img: "img/anatomy.jpg",
+                available: true
+            },
+            {
+                id: 3,
+                title: "Contabilidad Financiera",
+                author: "Charles T. Horngren",
+                year: 2022,
+                category: "Contabilidad",
+                carrera: "Contador Auditor",
+                img: "img/accounting.jpg",
+                available: true
+            },
+            {
+                id: 4,
+                title: "Derecho Civil",
+                author: "Arturo Alessandri",
+                year: 2019,
+                category: "Derecho",
+                carrera: "Derecho",
+                img: "img/law.jpg",
+                available: true
+            },
+            {
+                id: 5,
+                title: "Fundamentos de Electricidad",
+                author: "Robert L. Boylestad",
+                year: 2020,
+                category: "Electricidad",
+                carrera: "Electricidad Industrial",
+                img: "img/electricity.jpg",
+                available: true
+            },
+            {
+                id: 6,
+                title: "Administración de Empresas",
+                author: "Stephen P. Robbins",
+                year: 2021,
+                category: "Administración",
+                carrera: "Administración de Empresas",
+                img: "img/business.jpg",
+                available: true
+            },
+            {
+                id: 7,
+                title: "Introducción a la Programación",
+                author: "Tony Gaddis",
+                year: 2023,
+                category: "Programación",
+                carrera: "Ingeniería en Informática",
+                img: "img/programming.jpg",
+                available: true
+            },
+            {
+                id: 8,
+                title: "Anatomía y Fisiología",
+                author: "Elaine N. Marieb",
+                year: 2022,
+                category: "Medicina",
+                carrera: "Técnico en Enfermería",
+                img: "img/anatomy2.jpg",
+                available: true
+            }
+        ];
+        localStorage.setItem('books', JSON.stringify(books));
+    }
+}
+
+// ⭐ Inicio
+function init(){
+    if(!currentUser) {
+        window.location.href = 'index.html';
+        return;
+    }
+    
+    // Inicializar datos de ejemplo
+    initializeSampleData();
+    
+    document.getElementById("userName").textContent = currentUser.name;
+    
+    // Mostrar carrera del usuario en el perfil
+    if (currentUser && currentUser.career) {
+        document.getElementById("userCareer").textContent = currentUser.career;
+    } else {
+        document.getElementById("userCareer").textContent = "Carrera no asignada";
+        document.getElementById("userCareer").style.color = "var(--gray)";
+    }
+    
+    updateUserAvatar();
+    updateBookCounter(); // Actualizar contador
+    loadCareerFilter();
+    renderCatalogo();
+    renderSolicitudes();
+    renderPrestamos();
+    renderNotificaciones();
+    
+    // Actualizar notificaciones cada 10 segundos
+    setInterval(renderNotificaciones, 10000);
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
